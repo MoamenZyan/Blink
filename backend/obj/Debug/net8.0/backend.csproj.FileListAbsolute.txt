@@ -68,3 +68,5 @@
 /home/moamenzyan/Blink/backend/bin/Debug/net8.0/runtimes/win/lib/net6.0/System.Runtime.Caching.dll
 /home/moamenzyan/Blink/backend/bin/Debug/net8.0/runtimes/win/lib/net6.0/System.Security.Cryptography.ProtectedData.dll
 /home/moamenzyan/Blink/backend/bin/Debug/net8.0/runtimes/win/lib/net6.0/System.Windows.Extensions.dll
+/home/moamenzyan/Blink/backend/bin/Debug/net8.0/BCrypt.Net-Next.dll
+/home/moamenzyan/Blink/backend/bin/Debug/net8.0/Newtonsoft.Json.dll

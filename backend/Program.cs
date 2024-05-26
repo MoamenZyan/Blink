@@ -6,6 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Loading Environment Variables
 DotNetEnv.Env.Load();
 
+builder.Services.AddControllers();
+
 builder.Services.AddDbContext<DatabaseContext>(options => 
     options.UseMySql(DotNetEnv.Env.GetString("DATABASE_CONNECTION_STRING"), new MySqlServerVersion(new Version())));
 
@@ -18,6 +20,6 @@ using (var scope = app.Services.CreateScope())
     DB.Init(serviceProvider);
 }
 
-
+app.MapControllers();
 
 app.Run();

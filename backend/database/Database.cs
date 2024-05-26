@@ -1,4 +1,3 @@
-using System;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -7,17 +6,17 @@ public class DatabaseContext : DbContext
 
     public DatabaseContext (DbContextOptions<DatabaseContext> options) : base (options){}
 
-    DbSet<User> Users;
-    DbSet<Post> Posts;
-    DbSet<Comment> Comments;
-    DbSet<Reply> Replies;
-    DbSet<ReactionPost> ReactionPosts;
-    DbSet<ReactionComment> ReactionComments;
-    DbSet<ReactionReply> ReactionReplies;
-    DbSet<Group> Groups_;
-    DbSet<GroupAdmin> GroupAdmin;
-    DbSet<GroupUser> GroupUser;
-    DbSet<Story> Stories;
+    public DbSet<User> Users {get; set;}
+    public DbSet<Post> Posts {get; set;}
+    public DbSet<Comment> Comments {get; set;}
+    public DbSet<Reply> Replies{get; set;}
+    public DbSet<ReactionPost> ReactionPosts {get; set;}
+    public DbSet<ReactionComment> ReactionComments {get; set;}
+    public DbSet<ReactionReply> ReactionReplies {get; set;}
+    public DbSet<Group> Groups_ {get; set;}
+    public DbSet<GroupAdmin> GroupAdmin {get; set;}
+    public DbSet<GroupUser> GroupUser {get; set;}
+    public DbSet<Story> Stories {get; set;}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

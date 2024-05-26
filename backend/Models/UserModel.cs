@@ -1,9 +1,10 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 public class User
 {
     [Key]
-    public required int id {get; set;}
+    public int id {get; set;}
     public bool verified {get; set;}
     public string? photo {get; set;}
     public required string username {get; set;}

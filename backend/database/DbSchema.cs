@@ -4,7 +4,7 @@ public static class DatabaseSchema
 {
     public static string UsersTable = @"CREATE TABLE IF NOT EXISTS Users(
         id INT AUTO_INCREMENT PRIMARY KEY,
-        verified TINYINT(0),
+        verified BOOLEAN,
         photo VARCHAR(255) DEFAULT NULL,
         username VARCHAR(60) UNIQUE,
         first_name VARCHAR(60),
@@ -35,7 +35,7 @@ public static class DatabaseSchema
     public static string ReactionsPostsTable = @"CREATE TABLE IF NOT EXISTS ReactionsPosts(
         user_id INT,
         post_id INT,
-        type TINYINT(1),
+        type BOOLEAN,
         PRIMARY KEY (user_id, post_id),
         FOREIGN KEY (user_id) REFERENCES Users(id),
         FOREIGN KEY (post_id) REFERENCES Posts(id)
@@ -43,7 +43,7 @@ public static class DatabaseSchema
     public static string ReactionsCommentsTable = @"CREATE TABLE IF NOT EXISTS ReactionsComments(
         user_id INT,
         comment_id INT,
-        type TINYINT(1),
+        type BOOLEAN,
         PRIMARY KEY (user_id, comment_id),
         FOREIGN KEY (user_id) REFERENCES Users(id),
         FOREIGN KEY (comment_id) REFERENCES Comments(id)
@@ -52,7 +52,7 @@ public static class DatabaseSchema
     public static string ReactionsRepliesTable = @"CREATE TABLE IF NOT EXISTS ReactionsReplies(
         user_id INT,
         reply_id INT,
-        type TINYINT(1),
+        type BOOLEAN,
         PRIMARY KEY (user_id, reply_id),
         FOREIGN KEY (user_id) REFERENCES Users(id),
         FOREIGN KEY (reply_id) REFERENCES Replies(id)
