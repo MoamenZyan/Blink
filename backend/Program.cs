@@ -18,6 +18,6 @@ using (var scope = app.Services.CreateScope())
     DB.Init(serviceProvider);
 }
 
-app.MapGet("/", () => $"{DotNetEnv.Env.GetString("VARIABLE")}");
+
 
 app.Run();
