@@ -80,7 +80,7 @@ This section outlines the technical specifications and infrastructure requiremen
 
 ### Design and User Interface Requirements:
 
-# UI/UX Created By Ammar Yasser
+#### UI/UX Created By Ammar Yasser
 
 This section focuses on the visual design and user interface elements of the social media web app. It includes guidelines for the overall aesthetic, layout, navigation, and branding elements to ensure a consistent and intuitive user experience.
 
