@@ -5,47 +5,59 @@ using Microsoft.EntityFrameworkCore;
 
 public class AuthenticationController : Controller
 {
-    private readonly DatabaseContext _context;
-    public AuthenticationController(DatabaseContext databaseContext)
+    private readonly UserService _userService;
+    public AuthenticationController(UserService userService)
     {
-        _context = databaseContext;
+        _userService = userService;
     }
 
-    [HttpPost("/api/v1/users/login")]
+    /// <summary>
+    /// Check user's credentials
+    /// </summary>
+    /// <remarks>
+    /// inputs:-
+    /// username,
+    /// password,
+    /// </remarks>
+    /// <response code="200">User Authenticated and JWT session created</response>
+    /// <response code="401">Unauthorized User</response>
+    /// <response code="422">Body is null</response>
+    /// <response code="500">internal server error</response>
+    [HttpPost("/api/v1/login")]
     public async Task<IActionResult> Login()
     {
-        var body = await new FormReader(Request.Body).ReadFormAsync();
-        if (body.ContainsKey("email") && body.ContainsKey("password"))
+        try
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.email == body["email"].FirstOrDefault());
-            if (user is not null)
+            var body = await new FormReader(Request.Body).ReadFormAsync();
+            if (body is not null)
             {
-                if (BCrypt.Net.BCrypt.EnhancedVerify(body["password"].FirstOrDefault(), user.password))
+                (bool, int) result = await _userService.UserLogin(Convert.ToString(body["username"]), Convert.ToString(body["password"]));
+                if (result.Item1)
                 {
-                    var token = JwtService.GenerateToken(user.id);
-                    Response.Headers["token"] = token;
+                    var token = JwtService.GenerateToken(result.Item2);
                     Response.Cookies.Append("jwt", token,
                     new CookieOptions
                     {
                         Path="/",
-                        Expires = DateTime.UtcNow.AddDays(30),
-                        HttpOnly = true,
+                        Expires=DateTime.UtcNow.AddDays(30),
+                        HttpOnly=true
                     });
-                    return Ok(new {status=true, message="user authenticated"});
+                    return new JsonResult(new {status=true,message="user authorized"}){StatusCode=200};
                 }
                 else
                 {
-                    return Unauthorized(new {status=false, message="incorrect credentials"});
+                    return new JsonResult(new {status=false,message="user unauthorized"}){StatusCode=401};
                 }
             }
             else
             {
-                return new JsonResult(new {status=false, message="user isn't found"}){StatusCode=404};
+                return new JsonResult(new {status=false,message="body is null"}){StatusCode=422};
             }
         }
-        else
+        catch(Exception exp)
         {
-            return BadRequest(new {status=false, message="corrupted data"});
+            Console.WriteLine(exp);
+            return new JsonResult(new {status=false,message="internal server error"}){StatusCode=500};
         }
     }
 }

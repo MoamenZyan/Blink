@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>backend</name>
+    </assembly>
+    <members>
+        <member name="M:AuthenticationController.Login">
+            <summary>
+            Check user's credentials
+            </summary>
+            <remarks>
+            inputs:-
+            username,
+            password,
+            </remarks>
+            <response code="200">User Authenticated and JWT session created</response>
+            <response code="401">Unauthorized User</response>
+            <response code="422">Body is null</response>
+            <response code="500">internal server error</response>
+        </member>
+        <member name="M:UsersController.CreateUser">
+            <summary>
+            Check user's credentials
+            </summary>
+            <response code="200">User Created</response>
+            <response code="422">One of user's info is incorrect / body is null</response>
+        </member>
+        <member name="M:UsersController.GetUsers">
+            <summary>
+            Get All Users
+            </summary>
+            <response code="200">Got Users</response>
+            <response code="404">No Users Found</response>
+        </member>
+        <member name="M:UsersController.GetUser(System.Int32)">
+            <summary>
+            Get Specific User By Id
+            </summary>
+            <response code="200">User Found</response>
+            <response code="404">No User Found With That Id</response>
+        </member>
+        <member name="M:UserService.AddUserAsync(System.Collections.Generic.Dictionary{System.String,Microsoft.Extensions.Primitives.StringValues})">
+            <summary>
+            Do validation before adding user to database
+            </summary>
+            <param name="body">dictionary has user information</param>
+            <returns>User that created and message</returns>
+        </member>
+        <member name="M:UserService.GetUserByIdAsync(System.Int32)">
+            <summary>
+            Get specific user from database
+            </summary>
+            <param name="id">Id of the user</param>
+            <returns>If found returns user, null otherwise</returns>
+        </member>
+        <member name="M:UserService.GetAllAsync">
+            <summary>
+            Get all users from database
+            </summary>
+            <returns>if found returns users, null otherwise</returns>
+        </member>
+        <member name="M:UserService.Filter(System.Func{User,System.Boolean})">
+            <summary>
+            Filter method to filter user's by specific condition
+            </summary>
+            <param name="func">delegate of condition</param>
+            <returns>if there any metch it returns it, null otherwise</returns>
+        </member>
+        <member name="M:UserService.Delete(System.Int32,System.String)">
+            <summary>
+            It delete user from database
+            </summary>
+            <param name="id">id of the user</param>
+            <param name="token">token of the signed in user (more secure)</param>
+            <returns>returns true if successfull, false otherwise</returns>
+        </member>
+        <member name="M:UserService.UserLogin(System.String,System.String)">
+            <summary>
+            make jwt and cookie to make user log in
+            </summary>
+            <param name="username">User's username</param>
+            <param name="password">User's password</param>
+            <returns>return true and user's id if authenticated, false and default otherwise</returns>
+        </member>
+        <member name="M:UserService.CheckUserInfo(System.Collections.Generic.Dictionary{System.String,Microsoft.Extensions.Primitives.StringValues})">
+            <summary>
+            Validate user's information
+            </summary>
+            <param name="body">Dictionary has user's info</param>
+            <returns>returns enum based on user's information</returns>
+        </member>
+    </members>
+</doc>

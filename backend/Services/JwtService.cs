@@ -5,7 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 
 public class JwtService
 {
-    private static string _secretKey = "550e8400e29b41d4a716446655440000";
+    // Creating JWT token
     public static string GenerateToken(int UserId)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
@@ -24,12 +24,14 @@ public class JwtService
         return tokenHandler.WriteToken(token);
     }
 
+
+    // To verify and get token payload (user id)
     public static int VerifyToken(string token)
     {
         if (token is not null)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_secretKey);
+            var key = Encoding.ASCII.GetBytes(DotNetEnv.Env.GetString("JWT_SECRET_KEY"));
             var userId = tokenHandler.ValidateToken(token, new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,

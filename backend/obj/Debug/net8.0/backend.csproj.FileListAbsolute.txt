@@ -70,3 +70,12 @@
 /home/moamenzyan/Blink/backend/bin/Debug/net8.0/runtimes/win/lib/net6.0/System.Windows.Extensions.dll
 /home/moamenzyan/Blink/backend/bin/Debug/net8.0/BCrypt.Net-Next.dll
 /home/moamenzyan/Blink/backend/bin/Debug/net8.0/Newtonsoft.Json.dll
+/home/moamenzyan/Blink/backend/bin/Debug/net8.0/AngleSharp.dll
+/home/moamenzyan/Blink/backend/bin/Debug/net8.0/AngleSharp.Css.dll
+/home/moamenzyan/Blink/backend/bin/Debug/net8.0/HtmlSanitizer.dll
+/home/moamenzyan/Blink/backend/bin/Debug/net8.0/Microsoft.OpenApi.dll
+/home/moamenzyan/Blink/backend/bin/Debug/net8.0/Swashbuckle.AspNetCore.Swagger.dll
+/home/moamenzyan/Blink/backend/bin/Debug/net8.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+/home/moamenzyan/Blink/backend/bin/Debug/net8.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+/home/moamenzyan/Blink/backend/obj/Debug/net8.0/backend.MvcApplicationPartsAssemblyInfo.cs
+/home/moamenzyan/Blink/backend/bin/Debug/net8.0/MyApi.xml

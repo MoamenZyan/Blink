@@ -18,6 +18,7 @@ public class DatabaseContext : DbContext
     public DbSet<GroupUser> GroupUser {get; set;}
     public DbSet<Story> Stories {get; set;}
 
+    // Create PK out of non-prime attributes
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ReactionPost>().HasKey(r => new {r.user_id, r.post_id}).HasName("PK_ReactionPost");
