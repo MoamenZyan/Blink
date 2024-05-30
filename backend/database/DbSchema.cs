@@ -6,6 +6,7 @@ public static class DatabaseSchema
         id INT AUTO_INCREMENT PRIMARY KEY,
         verified BOOLEAN,
         photo VARCHAR(255) DEFAULT NULL,
+        privacy ENUM('public', 'private', 'friends'),
         username VARCHAR(60) UNIQUE,
         first_name VARCHAR(60),
         last_name VARCHAR(60),
@@ -17,6 +18,7 @@ public static class DatabaseSchema
     public static string PostsTable = @"CREATE TABLE IF NOT EXISTS Posts(
         id INT AUTO_INCREMENT PRIMARY KEY,
         photo VARCHAR(255) DEFAULT NULL,
+        privacy ENUM('public', 'private', 'friends'),
         user_id INT,
         caption VARCHAR(1024),
         created_at DATETIME,
@@ -28,6 +30,7 @@ public static class DatabaseSchema
         user_id INT,
         photo VARCHAR(255) DEFAULT NULL,
         content VARCHAR(255),
+        privacy ENUM('public', 'private', 'friends'),
         created_at DATETIME,
         FOREIGN KEY (user_id) REFERENCES Users(id)
     )";
@@ -85,6 +88,7 @@ public static class DatabaseSchema
     public static string GroupsTable = @"CREATE TABLE IF NOT EXISTS Groups_(
         id INT AUTO_INCREMENT PRIMARY KEY,
         photo VARCHAR(255) DEFAULT NULL,
+        privacy ENUM('public', 'private', 'friends'),
         description VARCHAR(1024),
         name VARCHAR(60) UNIQUE,
         created_at DATETIME

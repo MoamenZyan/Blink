@@ -31,7 +31,7 @@ public class AuthenticationController : Controller
             var body = await new FormReader(Request.Body).ReadFormAsync();
             if (body is not null)
             {
-                (bool, int) result = await _userService.UserLogin(Convert.ToString(body["username"]), Convert.ToString(body["password"]));
+                (bool, int) result = _userService.UserLogin(Convert.ToString(body["username"]), Convert.ToString(body["password"]));
                 if (result.Item1)
                 {
                     var token = JwtService.GenerateToken(result.Item2);

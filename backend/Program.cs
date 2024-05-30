@@ -17,8 +17,10 @@ builder.Services.AddSwaggerGen(c =>
      var filePath = Path.Combine(AppContext.BaseDirectory, "MyApi.xml");
      c.IncludeXmlComments(filePath);
 });
+builder.Services.AddScoped<IRepository<Post>, PostsRepository>();
+builder.Services.AddScoped<IRepository<User>, UsersRepository>();
+builder.Services.AddScoped<PostService>();
 builder.Services.AddScoped<UserService>();
-builder.Services.AddScoped<IRepository<User>, UserRepository>();
 // Loading Environment Variables
 DotNetEnv.Env.Load();
 

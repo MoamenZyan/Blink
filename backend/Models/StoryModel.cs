@@ -7,5 +7,6 @@ public class Story
     public int user_id {get; set;}
     public string? photo {get; set;}
     public string? content {get; set;}
+    public required string privacy {get; set;}
     public DateTime created_at {get; set;}
 }

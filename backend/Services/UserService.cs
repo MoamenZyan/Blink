@@ -1,5 +1,7 @@
 using System.Text.RegularExpressions;
 using Ganss.Xss;
+using Newtonsoft.Json.Linq;
+using Microsoft.Extensions.Primitives;
 
 public class UserService
 {
@@ -15,7 +17,7 @@ public class UserService
     /// </summary>
     /// <param name="body">dictionary has user information</param>
     /// <returns>User that created and message</returns>
-    public async Task<(UserDto?, string)> AddUserAsync(Dictionary<string, Microsoft.Extensions.Primitives.StringValues> body)
+    public async Task<(UserDto?, string)> AddUserAsync(Dictionary<string, StringValues> body)
     {
         switch (CheckUserInfo(body))
         {
@@ -30,7 +32,8 @@ public class UserService
                         email = sanitizer.Sanitize(body["email"]!),
                         photo = "null",
                         verified = false,
-                        created_at = DateTime.Now
+                        created_at = DateTime.Now,
+                        privacy = "public"
                     };
                     var result = await _userRepository.AddAsync(user);
                     if (result is not null)
@@ -75,9 +78,7 @@ public class UserService
         List<User>? users = await _userRepository.GetAllAsync();
         if (users is not null)
         {
-            List<UserDto> userDtos = new List<UserDto>();
-            foreach(User user in users)
-                userDtos.Add(new UserDto(user));
+            List<UserDto> userDtos = users.Select(u => new UserDto(u)).ToList();
             return userDtos;
         }
         else
@@ -91,14 +92,12 @@ public class UserService
     /// </summary>
     /// <param name="func">delegate of condition</param>
     /// <returns>if there any metch it returns it, null otherwise</returns>
-    public async Task<List<UserDto>?> Filter(Func<User, bool> func)
+    public List<UserDto>? Filter(Func<User, bool> func)
     {
-        IEnumerable<User>? users = await _userRepository.Filter(func);
+        List<User>? users = _userRepository.Filter(func)?.ToList();
         if (users is not null)
         {
-            List<UserDto> userDtos = new List<UserDto>();
-            foreach(User user in users)
-                userDtos.Add(new UserDto(user));
+            List<UserDto> userDtos = users.Select(u => new UserDto(u)).ToList();
             return userDtos;
         }
         else
@@ -142,14 +141,14 @@ public class UserService
     /// <param name="username">User's username</param>
     /// <param name="password">User's password</param>
     /// <returns>return true and user's id if authenticated, false and default otherwise</returns>
-    public async Task<(bool, int)> UserLogin(string username, string password)
+    public (bool, int) UserLogin(string username, string password)
     {
         if (username is not null && password is not null)
         {
-            var result = await _userRepository.Filter((user) => user.username == username);
-            if (result is not null)
+            var result = _userRepository.Filter((user) => user.username == username);
+            var user = result?.First();
+            if (user is not null)
             {
-                var user = result.First();
                 return (BCrypt.Net.BCrypt.EnhancedVerify(password, user.password), user.id);
             }
             else
@@ -158,6 +157,36 @@ public class UserService
         else
         {
             return (false, default);
+        }
+    }
+
+    public async Task<bool> UpdateUser(int id, JObject json)
+    {
+        User? user = await _userRepository.GetByIdAsync(id);
+        if (user is not null)
+        {
+            try
+            {
+                foreach (var property in json.Properties())
+                {
+                    var userProperty = user.GetType().GetProperty(property.Name);
+                    if (userProperty is not null)
+                    {
+                        var convertedValue = property.Value.ToObject(userProperty.PropertyType);
+                        userProperty.SetValue(user, convertedValue);
+                    }
+                }
+                return await _userRepository.Update(user);
+            }
+            catch(Exception exp)
+            {
+                Console.WriteLine(exp);
+                return false;
+            }
+        }
+        else
+        {
+            return false;
         }
     }
 

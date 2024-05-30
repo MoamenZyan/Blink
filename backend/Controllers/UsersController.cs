@@ -11,7 +11,7 @@ public class UsersController : Controller
 
 
     /// <summary>
-    /// Check user's credentials
+    /// Create User
     /// </summary>
     /// <response code="200">User Created</response>
     /// <response code="422">One of user's info is incorrect / body is null</response>
@@ -61,5 +61,29 @@ public class UsersController : Controller
             return new JsonResult(new {status=true,user=user});
         else
             return new JsonResult(new {status=false, message=$"no user found with id {id}"}){StatusCode=404};
+    }
+
+    /// <summary>
+    /// Delete User
+    /// </summary>
+    /// <remarks>authentication and authorization from cookie</remarks>
+    /// <response code="200">User Deleted</response>
+    /// <response code="404">No User Found With That Id</response>
+    [HttpDelete("/api/v1/users")]
+    public async Task<IActionResult> DeleteUser()
+    {
+        var userId = JwtService.VerifyToken(Convert.ToString(Request.Headers["jwt"]));
+        if (userId is not default(int))
+        {
+            var result = await _userService.Delete(userId, Convert.ToString(Request.Headers["jwt"]));
+            if (result)
+                return new JsonResult(new {status=true,message="user deleted successfully"});
+            else
+                return new JsonResult(new {status=false,message="can't delete user"}){StatusCode=401};
+        }
+        else
+        {
+            return new JsonResult(new {status=false,message="corrupted token"}){StatusCode=422};
+        }
     }
 }

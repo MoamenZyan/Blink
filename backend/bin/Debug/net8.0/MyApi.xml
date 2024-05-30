@@ -18,9 +18,65 @@
             <response code="422">Body is null</response>
             <response code="500">internal server error</response>
         </member>
+        <member name="M:PostsController.CreatePost(System.Object)">
+             <summary>
+             To create post
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 POST /api/v1/posts
+                 {
+                     "user_id": "1",
+                     "caption": "Hello Guys !!",
+                     "privacy": "public",
+                 }
+            
+             </remarks>
+             <param name="data">JSON data that has post info</param>
+             <response code="201">Post Created</response>
+             <response code="400">Json is null</response>
+             <response code="401">Unauthenticated user / Invalid or expired JWT token</response>
+             <response code="500">Internal server error</response>
+        </member>
+        <member name="M:PostsController.GetAllPosts">
+            <summary>
+            To Get All Posts
+            </summary>
+            <response code="200">Got all posts</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:PostsController.GetPost(System.Int32)">
+            <summary>
+            Get Specific Post By Id
+            </summary>
+            <param name="id">Id of the post</param>
+            <response code="200">Found the post</response>
+            <response code="404">No post found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:PostsController.UpdatePost(System.Object,System.Int32)">
+            <summary>
+            To Update Specific Post
+            </summary>
+            <param name="data">New post info</param>
+            <param name="id">Post id</param>
+            <response code="200">Post updated successfully</response>
+            <response code="401">Unauthenticated user</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:PostsController.DeletePost(System.Int32)">
+            <summary>
+            To Delete Specific Post
+            </summary>
+            <param name="id">Post id</param>
+            <response code="200">Post deleted successfully</response>
+            <response code="401">Unauthenticated user</response>
+            <response code="500">Internal server error</response>
+        </member>
         <member name="M:UsersController.CreateUser">
             <summary>
-            Check user's credentials
+            Create User
             </summary>
             <response code="200">User Created</response>
             <response code="422">One of user's info is incorrect / body is null</response>
@@ -37,6 +93,14 @@
             Get Specific User By Id
             </summary>
             <response code="200">User Found</response>
+            <response code="404">No User Found With That Id</response>
+        </member>
+        <member name="M:UsersController.DeleteUser">
+            <summary>
+            Delete User
+            </summary>
+            <remarks>authentication and authorization from cookie</remarks>
+            <response code="200">User Deleted</response>
             <response code="404">No User Found With That Id</response>
         </member>
         <member name="M:UserService.AddUserAsync(System.Collections.Generic.Dictionary{System.String,Microsoft.Extensions.Primitives.StringValues})">

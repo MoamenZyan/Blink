@@ -1,14 +1,15 @@
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 // Repository for Users
 
-public class UserRepository : IRepository<User>
+public class UsersRepository : IRepository<User>
 {
     private readonly DatabaseContext _context;
 
-    public UserRepository(DatabaseContext databaseContext)
+    public UsersRepository(DatabaseContext databaseContext)
     {
         _context = databaseContext;
     }
@@ -54,13 +55,18 @@ public class UserRepository : IRepository<User>
     }
 
     // Method that filter users by delegate function
-    public async Task<IEnumerable<User>?> Filter(Func<User, bool> func)
+    public IEnumerable<User> Filter(Func<User, bool> func)
     {
-        List<User>? users = await GetAllAsync();
-        if (users is not null)
-            return users.Where(func);
-        else
-            return null;
+        List<User>? users = _context.Users.Where(func).ToList();
+        return users;
+    }
+
+    // Update The Passed User
+    public async Task<bool> Update(User user)
+    {
+        EntityEntry result = _context.Users.Update(user);
+        await _context.SaveChangesAsync();
+        return result.State == EntityState.Modified;
     }
 
     // Method to delete one or more user

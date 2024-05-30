@@ -7,6 +7,7 @@ public class Group
     public string? photo {get; set;}
     public string? description {get; set;}
     public required string name {get; set;}
+    public required string privacy {get; set;}
     public DateTime created_at {get; set;}
 }
 
