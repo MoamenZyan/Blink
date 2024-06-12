@@ -1,0 +1,204 @@
+.background {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: url("./assets/background.svg") center;
+    background-size: contain;
+    min-height: 100vh;
+    width: 100%;
+    height: 100%;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.left {
+    position: relative;
+    border-radius: 50px;
+    height: 700px;
+    width: 75%;
+    background-color: white;
+}
+
+.right {
+    position: absolute;
+    background: url("./assets/Rectangle.svg") no-repeat center;
+    border-radius: 50px;
+    border-bottom-left-radius: 0;
+    height: 700px;
+    width: 50%;
+    top:0;
+    right: 0;
+    z-index: 1;
+}
+
+.inner_right_wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    border-radius: 100px;
+    width: 100%;
+    height: 100%;
+}
+
+.stars {
+    position: absolute;
+    background: url("./assets/stars.svg") no-repeat center;
+    width: 140px;
+    height: 140px;
+    bottom: 70px;
+    left: 120px;
+}
+
+.photo {
+    margin-bottom: 100px;
+    background: url("./assets/photo.svg") no-repeat center;
+    width: 60vw;
+    height: 80vh;
+}
+
+.logo {
+    cursor: pointer;
+    background: url("./assets/Blink-logo.svg") no-repeat center;
+    width: 150px;
+    height: 120px;
+    margin-top: 10px;
+    margin-left: 30px;
+}
+
+.names {
+    display: flex;
+}
+
+.names div{
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.form_div {
+    text-align: center;
+    margin-top: -30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+    right: 25%;
+    width: 100%;
+}
+
+.form_div h2 {
+    color: var(black);
+}
+
+
+.form_div form {
+    position: relative;
+    width: 35%;
+}
+
+
+.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-radius: 50px;
+    height: 40px;
+    margin-top: 30px;
+    width: 100%;
+    background-color: var(--dark-yellow);
+}
+
+.button button {
+    cursor: pointer;
+    color: white;
+    font-weight: 700;
+    font-size: 15pt;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    width: 100%;
+}
+
+.button i {
+    position: absolute;
+    color: white;
+    right: 10px;
+    font-size: 15pt;
+}
+
+.slogan {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    right: 30px;
+    margin-top: 10px;
+    z-index: 2;
+}
+
+.slogan_right {
+    font-size: 30pt;
+    font-weight: 900;
+    color: white;
+    margin-left: 10px;
+    z-index: 100;
+}
+
+.slogan_left {
+    color: #FE6C4B;
+    font-size: 30pt;
+    font-weight: 900;
+    margin-right: 10px;
+}
+
+.slogan_left span {
+    margin-left: 100px;
+}
+
+.already {
+    text-align: left;
+    margin-top: 20px;
+}
+.already span {
+    margin-left: 5px;
+    cursor: pointer;
+    font-weight: 700;
+    text-decoration: underline;
+    color: var(--dark-yellow);
+}
+
+/* Screens */
+@media (max-width: 996px) {
+    .right {
+        display: none;
+    }
+    .left {
+        margin-top: 50px;
+        margin-bottom: 50px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        flex-direction: column;
+        width: 90%;
+    }
+    .form_div {
+        margin-top: 0;
+        right: 0;
+        width: 100%;
+    }
+    .form_div form {
+        width: 90%;
+    }
+    .slogan {
+        display: none;
+    }
+}

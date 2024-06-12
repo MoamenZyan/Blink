@@ -38,14 +38,24 @@ public class PostsRepository : IRepository<Post>
     // Get All Posts From Database
     public async Task<List<Post>?> GetAllAsync()
     {
-        List<Post> posts = await _context.Posts.ToListAsync();
+        List<Post> posts = await _context.Posts
+            .Include(p => p.User)
+            .Include(p => p.Reactions)
+            .Include(p => p.Comments)
+            .Include(p => p.Replies)
+            .ToListAsync();
+
         return posts;
     }
 
     // Get Post By Specific Id
     public async Task<Post?> GetByIdAsync(int id)
     {
-        Post? post = await _context.Posts.FirstOrDefaultAsync(post => post.id == id);
+        Post? post = await _context.Posts
+                    .Include(p => p.User)
+                    .Include(p => p.Reactions)
+                    .FirstOrDefaultAsync(post => post.Id == id);
+
         return post;
     }
 

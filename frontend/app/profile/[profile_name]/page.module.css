@@ -1,0 +1,21 @@
+.container {
+    width: 90%;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+.left {
+    width: 30%;
+}
+
+.center {
+    border-left: 1px solid rgb(222, 222, 222);
+    border-right: 1px solid rgb(222, 222, 222);
+    width: 70%;
+}
+
+.right {
+    width: 30%;
+}
+

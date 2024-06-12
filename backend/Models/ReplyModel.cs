@@ -1,13 +1,46 @@
-using System.ComponentModel.DataAnnotations;
 
 public class Reply
 {
-    [Key]
-    public int id {get; set;}
-    public int user_id {get; set;}
-    public int post_id {get; set;}
-    public int comment_id {get; set;}
-    public string? photo {get; set;}
-    public string? content {get; set;}
-    public DateTime created_at {get; set;}
+    public int Id {get; set;}
+    public int UserId {get; set;}
+    public int PostId {get; set;}
+    public int CommentId {get; set;}
+    public string? Photo {get; set;}
+    public string? Content {get; set;}
+    public DateTime CreatedAt {get; set;}
+
+    public virtual User User {get; set;} = null!;
+    public virtual Post Post {get; set;} = null!;
+    public virtual Comment Comment {get; set;} = null!;
+
+    public virtual List<ReactionReply> Reactions {get; set;} = new List<ReactionReply>();
+}
+
+public class ReplyDto
+{
+    public int Id {get; set;}
+    public int UserId {get; set;}
+    public int PostId {get; set;}
+    public int CommentId {get; set;}
+    public string? Photo {get; set;}
+    public string? Content {get; set;}
+    public string? UserPhoto {get; set;}
+    public string? Username {get; set;}
+    public DateTime CreatedAt {get; set;}
+
+    public virtual List<ReactionReplyDto> Reactions {get; set;} = new List<ReactionReplyDto>();
+
+    public ReplyDto(Reply reply)
+    {
+        Id = reply.Id;
+        UserId = reply.User.Id;
+        PostId = reply.Post.Id;
+        CommentId = reply.Comment.Id;
+        Photo = reply.Photo;
+        Content = reply.Content;
+        UserPhoto = reply.User.Photo;
+        Username = reply.User.Username;
+        CreatedAt = reply.CreatedAt;
+        Reactions = reply.Reactions.Select(r => new ReactionReplyDto(r)).ToList();
+    }
 }

@@ -18,6 +18,22 @@
             <response code="422">Body is null</response>
             <response code="500">internal server error</response>
         </member>
+        <member name="M:PostsController.GetAllPosts">
+            <summary>
+            To Get All Posts
+            </summary>
+            <response code="200">Got all posts</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:PostsController.GetPost(System.Int32)">
+            <summary>
+            Get Specific Post By Id
+            </summary>
+            <param name="id">Id of the post</param>
+            <response code="200">Found the post</response>
+            <response code="404">No post found</response>
+            <response code="500">Internal server error</response>
+        </member>
         <member name="M:PostsController.CreatePost(System.Object)">
              <summary>
              To create post
@@ -39,22 +55,6 @@
              <response code="401">Unauthenticated user / Invalid or expired JWT token</response>
              <response code="500">Internal server error</response>
         </member>
-        <member name="M:PostsController.GetAllPosts">
-            <summary>
-            To Get All Posts
-            </summary>
-            <response code="200">Got all posts</response>
-            <response code="500">Internal server error</response>
-        </member>
-        <member name="M:PostsController.GetPost(System.Int32)">
-            <summary>
-            Get Specific Post By Id
-            </summary>
-            <param name="id">Id of the post</param>
-            <response code="200">Found the post</response>
-            <response code="404">No post found</response>
-            <response code="500">Internal server error</response>
-        </member>
         <member name="M:PostsController.UpdatePost(System.Object,System.Int32)">
             <summary>
             To Update Specific Post
@@ -74,13 +74,6 @@
             <response code="401">Unauthenticated user</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:UsersController.CreateUser">
-            <summary>
-            Create User
-            </summary>
-            <response code="200">User Created</response>
-            <response code="422">One of user's info is incorrect / body is null</response>
-        </member>
         <member name="M:UsersController.GetUsers">
             <summary>
             Get All Users
@@ -95,6 +88,13 @@
             <response code="200">User Found</response>
             <response code="404">No User Found With That Id</response>
         </member>
+        <member name="M:UsersController.CreateUser">
+            <summary>
+            Create User
+            </summary>
+            <response code="200">User Created</response>
+            <response code="422">One of user's info is incorrect / body is null</response>
+        </member>
         <member name="M:UsersController.DeleteUser">
             <summary>
             Delete User
@@ -102,6 +102,18 @@
             <remarks>authentication and authorization from cookie</remarks>
             <response code="200">User Deleted</response>
             <response code="404">No User Found With That Id</response>
+        </member>
+        <member name="T:backend.Migrations.Initial">
+            <inheritdoc />
+        </member>
+        <member name="M:backend.Migrations.Initial.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:backend.Migrations.Initial.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:backend.Migrations.Initial.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
         </member>
         <member name="M:UserService.AddUserAsync(System.Collections.Generic.Dictionary{System.String,Microsoft.Extensions.Primitives.StringValues})">
             <summary>

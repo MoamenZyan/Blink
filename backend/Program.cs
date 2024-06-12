@@ -1,7 +1,8 @@
+using System.Text.Json.Serialization;
+using StackExchange.Redis;
 using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,28 +18,48 @@ builder.Services.AddSwaggerGen(c =>
      var filePath = Path.Combine(AppContext.BaseDirectory, "MyApi.xml");
      c.IncludeXmlComments(filePath);
 });
+
+// Configure Cors
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocal", builder =>
+    {
+        builder.WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
+
+// Dependancy Injection
+builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("localhost"));
+builder.Services.AddScoped<IRedisCache, RedisCache>();
 builder.Services.AddScoped<IRepository<Post>, PostsRepository>();
 builder.Services.AddScoped<IRepository<User>, UsersRepository>();
 builder.Services.AddScoped<PostService>();
 builder.Services.AddScoped<UserService>();
+
+// To prevent reference cycle
+builder.Services.AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+                options.JsonSerializerOptions.WriteIndented = true;
+            });
+
 // Loading Environment Variables
-DotNetEnv.Env.Load();
+Env.Load();
 
 builder.Services.AddControllers();
 
-builder.Services.AddDbContext<DatabaseContext>(options => 
-    options.UseMySql(DotNetEnv.Env.GetString("DATABASE_CONNECTION_STRING"), new MySqlServerVersion(new Version())));
+builder.Services.AddDbContext<DatabaseContext>(options =>
+{
+    options.UseMySql(Env.GetString("DATABASE_CONNECTION_STRING"), new MySqlServerVersion(new Version()));
+});
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var serviceProvider = scope.ServiceProvider;
-    // Database Initialization
-    DB.Init(serviceProvider);
-}
-
-
+app.UseCors("AllowLocal");
 app.MapControllers();
 app.UseSwagger();
 app.UseSwaggerUI(c =>

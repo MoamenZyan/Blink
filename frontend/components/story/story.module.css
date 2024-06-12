@@ -1,0 +1,37 @@
+.story_div {
+    margin: 5px;
+    height: 300px;
+    min-height: 300px;
+    width: 170px;
+    min-width: 170px;
+    border-radius: 20px;
+    background-color: var(--dark-yellow);
+    cursor: pointer;
+}
+
+.body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 250px;
+}
+
+.body p {
+    text-align: center;
+}
+
+.info {
+    display: flex;
+    align-items: center;
+}
+
+.info h3 {
+    font-size: 12pt;
+    font-weight: 800;
+}
+
+.photo {
+    background: url("./assets/user_default.svg") no-repeat center;
+    width: 50px;
+    height: 50px;
+}

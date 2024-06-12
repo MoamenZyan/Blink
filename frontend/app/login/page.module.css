@@ -1,0 +1,230 @@
+.background {
+    background: url("./assets/background.svg") center;
+    background-size: contain;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.left {
+    position: relative;
+    height: 600px;
+    width: 75%;
+    background-color: white;
+    border-radius: 50px;
+}
+
+.right {
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 600px;
+    width: 50%;
+    background-color: var(--light-yellow);
+    border-radius: 50px;
+    border-bottom-left-radius: 0px;
+}
+
+.logo {
+    background: url("./assets/Blink-logo.svg") no-repeat center;
+    width: 170px;
+    height: 100px;
+    margin-top: 30px;
+    margin-left: 30px;
+    cursor: pointer;
+}
+
+.form_div {
+    text-align: center;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+    right: 25%;
+    width: 100%;
+}
+
+
+.form_div form {
+    position: relative;
+    width: 35%;
+}
+
+.form_div .forget {
+    position: absolute;
+    right: 0;
+    max-width: max-content;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 10pt;
+    text-decoration: underline;
+    color: #FF9B00;
+}
+
+.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-radius: 50px;
+    height: 40px;
+    margin-top: 50px;
+    width: 100%;
+    background-color: var(--dark-yellow);
+}
+
+.button button {
+    cursor: pointer;
+    color: white;
+    font-weight: 700;
+    font-size: 15pt;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    width: 100%;
+}
+
+.button i {
+    position: absolute;
+    color: white;
+    right: 10px;
+    font-size: 15pt;
+}
+
+.signup {
+    font-size: 11pt;
+    text-align: start;
+    margin-top: 10px;
+    font-weight: 500;
+}
+
+.signup span {
+    cursor: pointer;
+    text-decoration: underline;
+    color: #FF9B00;
+}
+
+.topright {
+    display: flex;
+    position: absolute;
+    right: 15px;
+    top: 0;
+}
+
+.topright span {
+    margin-left: 10px;
+    display: inline-block;
+    width: 15px;
+    background-color: white;
+    border-bottom-right-radius: 50px;
+    border-bottom-left-radius: 50px;
+}
+
+.bottomright {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    align-items: flex-end;
+    right: 0;
+    bottom: 20px;
+}
+
+.bottomright span {
+    margin-left: 10px;
+    display: inline-block;
+    width: 300px;
+    height: 15px;
+    margin-top: 10px;
+    background-color: white;
+    border-bottom-left-radius: 50px;
+    border-top-left-radius: 50px;
+}
+
+.right p{
+    position: relative;
+    font-size: 30pt;
+    left: -30px;
+    font-weight: 700;
+    color: white;
+}
+
+.photo {
+    background: url("./assets/photo.svg") no-repeat center;
+    background-size: 100%;
+    width: 25vw;
+    height: 60vh;
+    margin-bottom: 15vh;
+    margin-right: 5vw;
+}
+
+.slogan {
+    text-transform: capitalize;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    left: 25px;
+    margin-top: 70px;
+}
+
+.slogan_right {
+    font-size: 30pt;
+    font-weight: 800;
+    color: white;
+    margin-left: 20px;
+    z-index: 3;
+}
+
+.slogan_left {
+    font-size: 30pt;
+    font-weight: 800;
+    color: var(--light-yellow);
+}
+
+.slogan_left span {
+    margin-left: 70px;
+}
+
+/* Screens */
+@media (max-width: 996px) {
+    .right {
+        display: none;
+    }
+    .left {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .form_div {
+        margin-top: 30px;
+        right: 0;
+    }
+
+    .form_div form {
+        position: relative;
+        width: 90%;
+    }
+
+    .slogan {
+        display: none;
+    }
+}

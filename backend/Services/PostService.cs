@@ -1,30 +1,54 @@
 using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Ganss.Xss;
+using StackExchange.Redis;
 
 public class PostService
 {
     private readonly IRepository<Post> _postRepository;
+    private readonly IRepository<User> _userRepository;
+    private readonly IRedisCache _redis;
+
     private HtmlSanitizer sanitizer = new HtmlSanitizer();
 
-    public PostService(IRepository<Post> postsRepository)
+    public PostService(IRepository<Post> postsRepository, IRepository<User> userRepository, IRedisCache redis)
     {
         _postRepository = postsRepository;
+        _userRepository = userRepository;
+        _redis = redis;
     }
 
-    // Add photo to database
-    public async Task<Post?> AddPost(int id, JObject json)
+    // Add post to database
+    public async Task<PostDto?> AddPost(int id, JObject json)
     {
+        var postsFromRedis = _redis.Get("posts");
         Post post = new Post
         {
-            user_id = id,
-            photo = Convert.ToString(json["photo"]), // Upload The Photo ******
-            privacy = Convert.ToString(json["privacy"])!,
-            caption = sanitizer.Sanitize(Convert.ToString(json["caption"])!),
-            created_at = DateTime.Now
+            UserId = id,
+            Photo = Convert.ToString(json["Photo"]), // Upload The Photo ******
+            Privacy = Convert.ToString(json["Privacy"])!,
+            Caption = sanitizer.Sanitize(Convert.ToString(json["Caption"])!),
+            CreatedAt = DateTime.Now,
         };
         var result = await _postRepository.AddAsync(post);
-        return result;
+        if (result is null) return null;
+        if (postsFromRedis is null)
+        {
+            var postsFromDb = await _postRepository.GetAllAsync();
+            _redis.Set("posts", JsonConvert.SerializeObject(postsFromDb, JsonSettings.DefaultSettings), new TimeSpan(1, 0, 0));
+        }
+        else
+        {
+            var posts = JsonConvert.DeserializeObject<List<Post>>(postsFromRedis)!.ToList();
+            posts.Add(post);
+            _redis.Set("posts", JsonConvert.SerializeObject(posts, JsonSettings.DefaultSettings), new TimeSpan(1, 0, 0));
+        }
+        User? user = await _userRepository.GetByIdAsync(id);
+        if (user is null)
+            throw new Exception("There is no user associated with this post");
+        result.User = user;
+        return new PostDto(result);
     }
 
     public List<Post> Filter(Func<Post, bool> func)
@@ -33,16 +57,37 @@ public class PostService
         return posts;
     }
 
-    public async Task<List<Post>?> GetAllPosts()
+    public async Task<List<PostDto>?> GetAllPosts()
     {
-        List<Post>? posts = await _postRepository.GetAllAsync();
-        return posts;
+        // Getting posts from redis
+        string? json = _redis.Get("posts");
+        if (json is null)
+        {
+            List<Post>? posts = await _postRepository.GetAllAsync();
+            if (posts is null)
+                return null;
+            // If not in redis then set it
+            _redis.Set("posts", JsonConvert.SerializeObject(posts, JsonSettings.DefaultSettings), new TimeSpan(1, 0, 0));
+            return posts.Select(p => new PostDto(p)).ToList();
+        }
+        var postsFromRedis = JsonConvert.DeserializeObject<List<Post>>(json)!;
+        return postsFromRedis.Select(p => new PostDto(p)).ToList();
     }
 
-    public async Task<Post?> GetPostById(int id)
+    public async Task<PostDto?> GetPostById(int id)
     {
-        Post? post = await _postRepository.GetByIdAsync(id);
-        return post;
+        // getting post from redis
+        string? json = _redis.Get($"post?id={id}");
+        if (json is null)
+        {
+            Post? result = await _postRepository.GetByIdAsync(id);
+            if (result is null)
+                return null;
+            // If not in redis then set it
+            _redis.Set($"post?id={id}", JsonConvert.SerializeObject(result, JsonSettings.DefaultSettings), new TimeSpan(1, 0, 0));
+            return new PostDto(result);
+        }
+        return new PostDto(JsonConvert.DeserializeObject<Post>(json)!);
     }
 
     public async Task<bool> UpdatePost(JObject json, string token, int postId)
@@ -73,7 +118,7 @@ public class PostService
         {
             var userId = JwtService.VerifyToken(token);
             Post? post = await _postRepository.GetByIdAsync(postId);
-            if (post?.user_id == userId)
+            if (post?.UserId == userId)
                 return await _postRepository.Delete(post);
             else
                 return false;

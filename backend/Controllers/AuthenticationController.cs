@@ -31,16 +31,20 @@ public class AuthenticationController : Controller
             var body = await new FormReader(Request.Body).ReadFormAsync();
             if (body is not null)
             {
-                (bool, int) result = _userService.UserLogin(Convert.ToString(body["username"]), Convert.ToString(body["password"]));
+                (bool, int) result = _userService.UserLogin(Convert.ToString(body["Username"]), Convert.ToString(body["Password"]));
                 if (result.Item1)
                 {
                     var token = JwtService.GenerateToken(result.Item2);
+                    if (token is null)
+                        return new JsonResult(new {status=false,message="internal server error"}){StatusCode=500};
+
                     Response.Cookies.Append("jwt", token,
                     new CookieOptions
                     {
+                        SameSite = SameSiteMode.Lax,
                         Path="/",
                         Expires=DateTime.UtcNow.AddDays(30),
-                        HttpOnly=true
+                        HttpOnly=false,
                     });
                     return new JsonResult(new {status=true,message="user authorized"}){StatusCode=200};
                 }

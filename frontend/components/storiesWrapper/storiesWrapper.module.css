@@ -1,0 +1,23 @@
+.story_div {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    width: 100%;
+    display: flex;
+    padding: 20px;
+}
+
+.story_div::-webkit-scrollbar {
+    background-color: transparent;
+    height: 12px;
+}
+
+.story_div::-webkit-scrollbar-thumb {
+    cursor: grab;
+    background-color: var(--pink);
+    border-radius: 25px;
+}
+
+.story_div::-webkit-scrollbar-track {
+    background: rgb(241, 220, 220);
+    border-radius: 10px;
+}

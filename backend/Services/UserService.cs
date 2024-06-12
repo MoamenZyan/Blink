@@ -2,14 +2,17 @@ using System.Text.RegularExpressions;
 using Ganss.Xss;
 using Newtonsoft.Json.Linq;
 using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
 
 public class UserService
 {
     private readonly IRepository<User> _userRepository;
+    private readonly IRedisCache _redis;
     private readonly HtmlSanitizer sanitizer = new HtmlSanitizer();
-    public UserService(IRepository<User> repository)
+    public UserService(IRepository<User> repository, IRedisCache redis)
     {
         _userRepository = repository;
+        _redis = redis;
     }
 
     /// <summary>
@@ -25,28 +28,45 @@ public class UserService
                 {
                     User user = new User
                     {
-                        username = sanitizer.Sanitize(body["username"]!),
-                        first_name = sanitizer.Sanitize(body["first_name"]!),
-                        last_name = sanitizer.Sanitize(body["last_name"]!),
-                        password = BCrypt.Net.BCrypt.EnhancedHashPassword(sanitizer.Sanitize(body["password"]!), 10),
-                        email = sanitizer.Sanitize(body["email"]!),
-                        photo = "null",
-                        verified = false,
-                        created_at = DateTime.Now,
-                        privacy = "public"
+                        Username = sanitizer.Sanitize(body["Username"]!),
+                        FirstName = sanitizer.Sanitize(body["FirstName"]!),
+                        LastName = sanitizer.Sanitize(body["LastName"]!),
+                        Password = BCrypt.Net.BCrypt.EnhancedHashPassword(sanitizer.Sanitize(body["Password"]!), 10),
+                        Email = sanitizer.Sanitize(body["Email"]!),
+                        Photo = "null",
+                        Verified = false,
+                        CreatedAt = DateTime.Now,
+                        Privacy = "public"
                     };
                     var result = await _userRepository.AddAsync(user);
                     if (result is not null)
+                    {
+                        // Updating cache
+                        var usersFromRedis = _redis.Get("users");
+                        if (usersFromRedis is null)
+                        {
+                            var usersFromDb = await _userRepository.GetAllAsync();
+                            _redis.Set("users", JsonConvert.SerializeObject(usersFromDb, JsonSettings.DefaultSettings), new TimeSpan(1, 0, 0));
+                        }
+                        else
+                        {
+                            List<User> users = JsonConvert.DeserializeObject<List<User>>(usersFromRedis)!.ToList();
+                            users.Add(user);
+                            _redis.Set("users", JsonConvert.SerializeObject(users, JsonSettings.DefaultSettings), new TimeSpan(1, 0, 0));
+                        }
                         return (new UserDto(result), "");
+                    }
                     else
+                    {
                         return (null, "");
+                    }
                 }
             case UserInfoValidator.UsernameError:
                 return (null, "username has error");
             case UserInfoValidator.FirstnameError:
-                return (null, "first_name has error");
+                return (null, "FirstName has error");
             case UserInfoValidator.LastnameError:
-                return (null, "last_name has error");
+                return (null, "LastName has error");
             case UserInfoValidator.PasswordError:
                 return (null, "password has error");
             case UserInfoValidator.EmailError:
@@ -60,13 +80,21 @@ public class UserService
     /// </summary>
     /// <param name="id">Id of the user</param>
     /// <returns>If found returns user, null otherwise</returns>
-    public async Task<UserDto?> GetUserByIdAsync(int id)
+    public async Task<UserFullDto?> GetUserByIdAsync(int id)
     {
-        var result = await _userRepository.GetByIdAsync(id);
-        if (result is not null)
-            return new UserDto(result);
-        else
-            return null;
+        // Get user from redis
+        var user = _redis.Get($"user?id={id}");
+        if (user is null)
+        {
+            var result = await _userRepository.GetByIdAsync(id);
+            if (result is null)
+                return null;
+            // Set user in redis
+            _redis.Set($"user?id={id}", JsonConvert.SerializeObject(result, JsonSettings.DefaultSettings), new TimeSpan(1, 0, 0));
+            return new UserFullDto(result);
+        }
+        User userFromRedis = JsonConvert.DeserializeObject<User>(user)!;
+        return new UserFullDto(userFromRedis);
     }
 
     /// <summary>
@@ -75,16 +103,20 @@ public class UserService
     /// <returns>if found returns users, null otherwise</returns>
     public async Task<List<UserDto>?> GetAllAsync()
     {
-        List<User>? users = await _userRepository.GetAllAsync();
-        if (users is not null)
+        // Get users from redis
+        var json = _redis.Get("users");
+        if (json is null)
         {
+            List<User>? users = await _userRepository.GetAllAsync();
+            if (users is null)
+                return null;
+            // Set users in redis
+            _redis.Set("users", JsonConvert.SerializeObject(users, JsonSettings.DefaultSettings), new TimeSpan(1, 0, 0));
             List<UserDto> userDtos = users.Select(u => new UserDto(u)).ToList();
             return userDtos;
         }
-        else
-        {
-            return null;
-        }
+        List<User> usersFromRedis = JsonConvert.DeserializeObject<List<User>>(json)!;
+        return usersFromRedis.Select(u => new UserDto(u)).ToList();
     }
 
     /// <summary>
@@ -145,11 +177,11 @@ public class UserService
     {
         if (username is not null && password is not null)
         {
-            var result = _userRepository.Filter((user) => user.username == username);
-            var user = result?.First();
+            var result = _userRepository.Filter((user) => user.Username == username);
+            var user = result?.FirstOrDefault();
             if (user is not null)
             {
-                return (BCrypt.Net.BCrypt.EnhancedVerify(password, user.password), user.id);
+                return (BCrypt.Net.BCrypt.EnhancedVerify(password, user.Password), user.Id);
             }
             else
                 return (false, default);
@@ -199,13 +231,13 @@ public class UserService
     {
         if (body is not null)
         {
-            if (Convert.ToString(body["username"]) is null)
+            if (Convert.ToString(body["Username"]) is null)
                 return UserInfoValidator.UsernameError;
 
-            if (Convert.ToString(body["first_name"]) is null)
+            if (Convert.ToString(body["FirstName"]) is null)
                 return UserInfoValidator.FirstnameError;
 
-            if (Convert.ToString(body["last_name"]) is null)
+            if (Convert.ToString(body["LastName"]) is null)
                 return UserInfoValidator.LastnameError;
 
             // password should contains:-
@@ -213,12 +245,12 @@ public class UserService
             // at least one uppercase letter
             // at least one digit
             // Has a minimum length of 8 characters
-            if (Convert.ToString(body["password"]) is null ||
-            !Regex.IsMatch(Convert.ToString(body["password"]), @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$"))
+            if (Convert.ToString(body["Password"]) is null ||
+            !Regex.IsMatch(Convert.ToString(body["Password"]), @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$"))
                 return UserInfoValidator.PasswordError;
 
-            if (Convert.ToString(body["email"]) is null
-            || !Regex.IsMatch(Convert.ToString(body["email"]), @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            if (Convert.ToString(body["Email"]) is null
+            || !Regex.IsMatch(Convert.ToString(body["Email"]), @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
                 return UserInfoValidator.EmailError;
 
             return UserInfoValidator.Validated;

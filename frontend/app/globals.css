@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans+Caption:wght@400;700&display=swap');
+
+:root {
+    --dark-yellow: #FCB341;
+    --light-yellow: #FFC737;
+    --light-gray: #b8b8b8;
+    --black: #333333;
+    --pink: rgba(255, 51, 102, 1);
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}

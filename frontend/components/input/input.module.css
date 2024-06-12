@@ -1,0 +1,41 @@
+.input_div input{
+    font-size: 12pt;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    width: 90%;
+    padding: 15px;
+    border-radius: 20px;
+    height: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+}
+
+.input_div input::placeholder {
+    font-size: 11pt;
+}
+
+.input_div {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    border-radius: 50px;
+    border: 2px solid var(--light-gray);
+    margin: 10px 0;
+}
+
+.input_div i {
+    border-radius: 50px;
+    padding: 10px;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+    color: var(black);
+}
+
+.input_div i:hover {
+    background-color: rgb(195, 195, 195);
+}
+
+.input_div i:active {
+    background-color: rgb(171, 171, 171);
+}

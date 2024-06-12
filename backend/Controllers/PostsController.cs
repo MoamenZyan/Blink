@@ -11,51 +11,6 @@ public class PostsController : Controller
     }
 
     /// <summary>
-    /// To create post
-    /// </summary>
-    /// <remarks>
-    /// Sample request:
-    ///
-    ///     POST /api/v1/posts
-    ///     {
-    ///         "user_id": "1",
-    ///         "caption": "Hello Guys !!",
-    ///         "privacy": "public",
-    ///     }
-    ///
-    /// </remarks>
-    /// <param name="data">JSON data that has post info</param>
-    /// <response code="201">Post Created</response>
-    /// <response code="400">Json is null</response>
-    /// <response code="401">Unauthenticated user / Invalid or expired JWT token</response>
-    /// <response code="500">Internal server error</response>
-    [HttpPost("/api/v1/posts")]
-    public async Task<IActionResult> CreatePost([FromBody] Object data)
-    {
-        try
-        {
-            if (data is null)
-                return BadRequest(new {status = false, message = "JSON data is null"});
-            var json = JObject.Parse(data.ToString()!);
-            Console.WriteLine(json);
-            if (Request.Cookies["jwt"] is null)
-                return Unauthorized(new {status = false, message = "Unauthenticated user"});
-            
-            var userId = JwtService.VerifyToken(Request.Cookies["jwt"]!);
-            if (userId is default(int))
-                return Unauthorized(new { status = false, message = "Invalid or expired JWT token" });
-
-            Post? post = await _postService.AddPost(userId, json);
-            return StatusCode(201, new {status=true, message="Post created successfully", post=post});
-        }
-        catch (Exception exp)
-        {
-            Console.WriteLine(exp);
-            return StatusCode(500, new {status=false, mesage="internal server error"});
-        }
-    }
-    
-    /// <summary>
     /// To Get All Posts
     /// </summary>
     /// <response code="200">Got all posts</response>
@@ -98,6 +53,53 @@ public class PostsController : Controller
             return StatusCode(500, new {status=false, mesage="internal server error"});
         }
     }
+
+
+    /// <summary>
+    /// To create post
+    /// </summary>
+    /// <remarks>
+    /// Sample request:
+    ///
+    ///     POST /api/v1/posts
+    ///     {
+    ///         "user_id": "1",
+    ///         "caption": "Hello Guys !!",
+    ///         "privacy": "public",
+    ///     }
+    ///
+    /// </remarks>
+    /// <param name="data">JSON data that has post info</param>
+    /// <response code="201">Post Created</response>
+    /// <response code="400">Json is null</response>
+    /// <response code="401">Unauthenticated user / Invalid or expired JWT token</response>
+    /// <response code="500">Internal server error</response>
+    [HttpPost("/api/v1/posts")]
+    public async Task<IActionResult> CreatePost([FromBody] Object data)
+    {
+        try
+        {
+            if (data is null)
+                return BadRequest(new {status = false, message = "JSON data is null"});
+            var json = JObject.Parse(data.ToString()!);
+            Console.WriteLine(json);
+            // if (Request.Headers["jwt"] is null)
+            //     return Unauthorized(new {status = false, message = "Unauthenticated user"});
+            
+            var userId = JwtService.VerifyToken(Request.Headers["jwt"]!);
+            if (userId is default(int))
+                return Unauthorized(new { status = false, message = "Invalid or expired JWT token" });
+
+            PostDto? post = await _postService.AddPost(userId, json);
+            return StatusCode(201, new {status=true, message="Post created successfully", post=post});
+        }
+        catch (Exception exp)
+        {
+            Console.WriteLine(exp);
+            return StatusCode(500, new {status=false, mesage="internal server error"});
+        }
+    }
+    
 
     /// <summary>
     /// To Update Specific Post

@@ -9,30 +9,6 @@ public class UsersController : Controller
         _userService = userService;
     }
 
-
-    /// <summary>
-    /// Create User
-    /// </summary>
-    /// <response code="200">User Created</response>
-    /// <response code="422">One of user's info is incorrect / body is null</response>
-    [HttpPost("/api/v1/users")]
-    public async Task<IActionResult> CreateUser()
-    {
-        var body = await new FormReader(Request.Body).ReadFormAsync();
-        if (body is not null)
-        {
-            var result = await _userService.AddUserAsync(body);
-            if (result.Item1 is not null)
-                return new JsonResult(new {status=true, message="user created successfully",user=result.Item1}){StatusCode=201};
-            else
-                return new JsonResult(new {status=false, message=result.Item2}){StatusCode=400};
-        }
-        else
-        {
-            return new JsonResult(new {status=false, message="body is null"}){StatusCode=422};
-        }
-    }
-
     /// <summary>
     /// Get All Users
     /// </summary>
@@ -62,6 +38,31 @@ public class UsersController : Controller
         else
             return new JsonResult(new {status=false, message=$"no user found with id {id}"}){StatusCode=404};
     }
+
+
+    /// <summary>
+    /// Create User
+    /// </summary>
+    /// <response code="200">User Created</response>
+    /// <response code="422">One of user's info is incorrect / body is null</response>
+    [HttpPost("/api/v1/users")]
+    public async Task<IActionResult> CreateUser()
+    {
+        var body = await new FormReader(Request.Body).ReadFormAsync();
+        if (body is not null)
+        {
+            var result = await _userService.AddUserAsync(body);
+            if (result.Item1 is not null)
+                return new JsonResult(new {status=true, message="user created successfully",user=result.Item1}){StatusCode=201};
+            else
+                return new JsonResult(new {status=false, message=result.Item2}){StatusCode=400};
+        }
+        else
+        {
+            return new JsonResult(new {status=false, message="body is null"}){StatusCode=422};
+        }
+    }
+
 
     /// <summary>
     /// Delete User

@@ -30,7 +30,11 @@ public class UsersRepository : IRepository<User>
     // Method to get specific user from database
     public async Task<User?> GetByIdAsync(int id)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.id == id);
+        var user = await _context.Users
+                    .Include(u => u.Posts)
+                    .Include(u => u.Stories)
+                    .FirstOrDefaultAsync(u => u.Id == id);
+
         if (user is not null)
             return user;
         else

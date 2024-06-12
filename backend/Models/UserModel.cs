@@ -1,46 +1,85 @@
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
-
 
 // User entity in db (has all information)
 public class User
 {
-    [Key]
-    public int id {get; set;}
-    public bool verified {get; set;}
-    public string? photo {get; set;}
-    public required string username {get; set;}
-    public required string first_name {get; set;}
-    public required string last_name {get; set;}
-    public required string password {get; set;}
-    public required string privacy {get; set;}
-    public required string email {get; set;}
-    public DateTime created_at {get; set;}
+    public int Id {get; set;}
+    public bool Verified {get; set;}
+    public string? Photo {get; set;}
+    public required string Username {get; set;}
+    public required string FirstName {get; set;}
+    public required string LastName {get; set;}
+    public required string Password {get; set;}
+    public required string Privacy {get; set;}
+    public required string Email {get; set;}
+    public DateTime CreatedAt {get; set;}
+
+    public virtual List<Story> Stories {get; set;} = new List<Story>();
+    public virtual List<Reply> Replies {get; set;} = new List<Reply>();
+    public virtual List<Post> Posts {get; set;} = new List<Post>();
+    public List<ReactionPost> ReactionPosts = new List<ReactionPost>();
+    public List<ReactionComment> ReactionComments = new List<ReactionComment>();
+    public List<ReactionReply> ReactionReplies = new List<ReactionReply>();
+    public virtual List<Comment> Comments {get; set;} = new List<Comment>();
+    public virtual List<Group> OwnedGroups {get; set;} = new List<Group>();
+    public virtual List<GroupAdmin> AdminOfGroups {get; set;} = new List<GroupAdmin>();
+    public virtual List<GroupUser> MemberOfGroups {get; set;} = new List<GroupUser>();
 }
 
-// Data transfer object for sending the entity without any sensitive data
-public class UserDto
+// User with full info e.g (posts, stories)
+public class UserFullDto
 {
-    public int id {get; set;}
+    public int Id {get; set;}
     public bool verified {get; set;}
     public string? photo {get; set;}
     public string username {get; set;}
-    public string first_name {get; set;}
-    public string last_name {get; set;}
-    public string privacy {get; set;}
-    public string email {get; set;}
-    public DateTime created_at {get; set;}
+    public string FirstName {get; set;}
+    public string LastName {get; set;}
+    public string Privacy {get; set;}
+    public string Email {get; set;}
+    public DateTime CreatedAt {get; set;}
+
+    public virtual List<PostDto> Posts {get; set;} = new List<PostDto>();
+    public virtual List<StoryDto> Stories {get; set;} = new List<StoryDto>();
+
+    public UserFullDto(User user)
+    {
+        Id = user.Id;
+        verified = user.Verified;
+        photo = user.Photo;
+        username = user.Username;
+        FirstName = user.FirstName;
+        LastName = user.LastName;
+        Email = user.Email;
+        CreatedAt = user.CreatedAt;
+        Privacy = user.Privacy;
+        Posts = user.Posts.Select(p => new PostDto(p)).ToList();
+        Stories = user.Stories.Select(s => new StoryDto(s)).ToList();
+    }
+}
+
+// Just user info
+public class UserDto
+{
+    public int Id {get; set;}
+    public bool verified {get; set;}
+    public string? photo {get; set;}
+    public string username {get; set;}
+    public string FirstName {get; set;}
+    public string LastName {get; set;}
+    public string Privacy {get; set;}
+    public string Email {get; set;}
+    public DateTime CreatedAt {get; set;}
 
     public UserDto(User user)
     {
-        id = user.id;
-        verified = user.verified;
-        photo = user.photo;
-        username = user.username;
-        first_name = user.first_name;
-        last_name = user.last_name;
-        email = user.email;
-        created_at = user.created_at;
-        privacy = user.privacy;
+        Id = user.Id;
+        verified = user.Verified;
+        photo = user.Photo;
+        username = user.Username;
+        FirstName = user.FirstName;
+        LastName = user.LastName;
+        Email = user.Email;
+        CreatedAt = user.CreatedAt;
+        Privacy = user.Privacy;
     }
 }
