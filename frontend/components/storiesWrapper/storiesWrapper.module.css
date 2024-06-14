@@ -1,4 +1,5 @@
 .story_div {
+    margin-top: 80px;
     overflow-x: auto;
     flex-wrap: nowrap;
     width: 100%;

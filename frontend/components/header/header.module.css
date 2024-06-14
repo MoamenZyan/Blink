@@ -1,17 +1,23 @@
 .parent {
-    box-shadow: 0px 0px 30px -5px gray;
+    display: flex;
+    align-items: center;
+    background-color: white;
+    width: 100%;
+    z-index: 100;
+    position: fixed;
+    box-shadow: 0px 5px 10px 0px rgb(192, 190, 190);
+    height: 100px;
+    top: 0;
 }
 
 .container {
     width: 90%;
-    margin: auto;
+    margin: 0 auto;
 }
 
 .header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    height: 80px;
 }
 
 .logo {
@@ -21,10 +27,19 @@
     height: 80px;
 }
 
+.notification_wrapper {
+    display: flex;
+    justify-content: flex-end;
+    width: 120px;
+}
+
 .notification {
+    position: relative;
+    box-shadow: 0px 5px 15px -1px rgb(170, 168, 168);
+    border-radius: 50%;
     cursor: pointer;
     background: url("./assets/notification.svg") no-repeat center;
-    width: 120px;
+    width: 80px;
     height: 80px;
 }
 
@@ -35,32 +50,33 @@
 }
 
 .header_buttons .button {
-    padding:0 45px;
+    padding:0 35px;
     cursor: pointer;
 
 }
 
 .header_buttons .active {
+    padding: 0 45px;
     background-color: rgba(255, 153, 51, 1);
 }
 
 .header_buttons .button_wrapper_active {
     border-radius: 15px;
     box-shadow: 0px 0px 20px -2px rgba(255, 153, 51, 1);
-    border-bottom: 5px solid rgba(255, 153, 51, 1);
+    border-bottom: 6px solid rgba(255, 153, 51, 1);
 }
 
 .button_wrapper {
-    background-color: rgb(232, 229, 229);
-    margin-left: 50px;
-    margin-right: 50px;
-    border-radius: 25px;
-    box-shadow: 0px 0px 30px 2px rgb(187, 184, 184);
+    position: relative;
+    margin-left: 40px;
+    margin-right: 40px;
+    border-radius: 20px;
+    box-shadow: 0px 0px 10px 0px rgb(225, 222, 222);
 }
 
 
 .user {
-    width: 38px;
+    width: 30px;
     height: 60px;
     background-color: #333333;
     mask: url("./assets/user.svg") no-repeat center;
@@ -68,14 +84,15 @@
 }
 
 .home {
-    width: 38px;
+    width: 30px;
     height: 60px;
     background-color: #333333;
     mask: url("./assets/home.svg") no-repeat center;
     -webkit-mask: url("./assets/home.svg") no-repeat center;
 }
+
 .explore {
-    width: 38px;
+    width: 30px;
     height: 60px;
     background-color: #333333;
     mask: url("./assets/compass.svg") no-repeat center;
@@ -83,7 +100,8 @@
 }
 
 .friends {
-    width: 38px;
+    position: relative;
+    width: 30px;
     height: 60px;
     background-color: #333333;
     mask: url("./assets/friends.svg") no-repeat center;
@@ -103,4 +121,16 @@
     font-size: 15pt;
     outline: none;
     border: none;
+}
+
+.notify {
+    cursor: pointer;
+    top: 0;
+    right: 0;
+    position: absolute;
+    width: 23px;
+    height: 23px;
+    border-radius: 50%;
+    background-color: var(--pink);
+    z-index: 100;
 }

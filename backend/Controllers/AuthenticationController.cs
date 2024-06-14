@@ -46,7 +46,7 @@ public class AuthenticationController : Controller
                         Expires=DateTime.UtcNow.AddDays(30),
                         HttpOnly=false,
                     });
-                    return new JsonResult(new {status=true,message="user authorized"}){StatusCode=200};
+                    return new JsonResult(new {status=true,message="user authorized",Id=result.Item2}){StatusCode=200};
                 }
                 else
                 {

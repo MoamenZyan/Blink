@@ -3,11 +3,13 @@ import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import styles from "./header.module.css";
+import NotificationList from "../notificationList/notificationList.module";
 
 export default function Header(props) {
     const router = useRouter();
     const [tab, setTab] = useState(window.location.pathname);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [notificationList, setNotificationList] = useState(false);
     useEffect(() => {
         setTab(window.location.pathname);
         const token = Cookies.get("jwt");
@@ -32,9 +34,18 @@ export default function Header(props) {
                             </div>
                             <div className={`${styles.button_wrapper} ${tab == "/friends" && styles.button_wrapper_active}`}>
                                 <div className={`${styles.button} ${styles.friends} ${tab == "/friends" && styles.active}`}></div>
+                                {isLoggedIn && <span className={styles.notify} style={{top: "-10px", right: "-10px"}}></span>}
                             </div>
                         </div>
-                        {isLoggedIn && <div className={styles.notification}></div>}
+                        {isLoggedIn &&
+                        <>
+                            <div className={styles.notification_wrapper}>
+                                <div onClick={() => {setNotificationList(!notificationList)}} className={styles.notification}>
+                                    {isLoggedIn && <span className={styles.notify}></span>}
+                                </div>
+                            </div>
+                            {notificationList && <NotificationList />}
+                        </>}
                         {!isLoggedIn &&
                         <div onClick={() => {router.push("/login")}} className={styles.login_button}>
                             <button>LOGIN</button>

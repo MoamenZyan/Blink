@@ -1,0 +1,51 @@
+.list {
+    padding: 10px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    min-height: 300px;
+    height: max-content;
+    width: 380px;
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+    box-shadow: 0px 5px 10px gray;
+    right: 2%;
+    top: 100px;
+    z-index: 500;
+}
+
+
+.delimeter {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.delimeter p {
+    font-weight: 800;
+    font-size: 10pt;
+    margin-right: 10px;
+}
+
+.delimeter span {
+    border-radius: 25px;
+    height: 2px;
+    width: 100%;
+    background-color: black;
+}
+
+.clear {
+    margin: 0 auto;
+    text-align: center;
+    margin-top: 30px;
+    color: gray;
+    font-size: 10pt;
+    cursor: pointer;
+    width: max-content;
+}
+
+
+.clear:hover {
+    text-decoration: underline;
+}

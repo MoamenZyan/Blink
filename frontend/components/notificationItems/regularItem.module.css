@@ -1,0 +1,25 @@
+.item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border-radius: 25px;
+    margin-bottom: 10px;
+    padding: 20px 10px;
+    background-color: rgba(0, 0, 0, 0.052);
+}
+
+.photo {
+    margin-right: 15px;
+    mask: url("./assets/user_photo_small.svg") no-repeat center;
+    width: 40px;
+    height: 40px;
+    background-color: var(--dark-yellow);
+}
+
+.time {
+    font-weight: 700;
+    font-size: 10pt;
+    position: absolute;
+    bottom: 7px;
+    right: 20px;
+}

@@ -14,12 +14,13 @@ export default function LoginPage() {
     const submit = async (event) => {
         event.preventDefault();
         setLoading(true);
-        if (await Login(new FormData(form.current))) {
+        const result = await Login(new FormData(form.current));
+        if (result.status) {
+            localStorage.setItem('userId', result.id);
             router.push("/");
             setLoading(false);
         } else {
             setLoading(false);
-            console.log("no");
         }
     }
 

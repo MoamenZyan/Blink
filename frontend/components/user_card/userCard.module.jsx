@@ -3,11 +3,20 @@ import Cookies from "js-cookie";
 import styles from "./userCard.module.css";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Logout from "@/ApiHelper/Authentication/logout";
 
 export default function UserCard(props) {
     const router = useRouter();
     const [list, setList] = useState(false);
     const [isLogged, setIsLogged] = useState(false);
+
+    const handleLogout = async () => {
+        if (await Logout()) {
+            localStorage.removeItem('userId');
+            Cookies.remove("jwt");
+            router.push("/login")
+        }
+    }
     const listClick = () => {
         setList(!list);
     }
@@ -79,7 +88,7 @@ export default function UserCard(props) {
                         <div className={styles.feedback_icon}></div>
                         <p>Give Feedback</p>
                     </div>
-                    <div className={styles.logout}>
+                    <div className={styles.logout} onClick={handleLogout}>
                         <div className={styles.logout_icon}></div>
                         <p>Logout</p>
                     </div>

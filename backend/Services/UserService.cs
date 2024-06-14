@@ -180,9 +180,7 @@ public class UserService
             var result = _userRepository.Filter((user) => user.Username == username);
             var user = result?.FirstOrDefault();
             if (user is not null)
-            {
                 return (BCrypt.Net.BCrypt.EnhancedVerify(password, user.Password), user.Id);
-            }
             else
                 return (false, default);
         }

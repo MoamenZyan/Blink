@@ -87,4 +87,25 @@ public class UsersController : Controller
             return new JsonResult(new {status=false,message="corrupted token"}){StatusCode=422};
         }
     }
+
+    [HttpGet("/api/v1/user/logout")]
+    public IActionResult Logout()
+    {
+        try
+        {
+            Response.Cookies.Append("jwt", "", new CookieOptions
+            {
+                Path = "/",
+                Expires = DateTime.UtcNow.AddDays(-1),
+                SameSite = SameSiteMode.Lax,
+                HttpOnly = true
+            });
+            return Ok("logged out successfully");
+        }
+        catch (Exception exp)
+        {
+            Console.WriteLine(exp);
+            return StatusCode(500, "Internal Server Error");
+        }
+    }
 }
