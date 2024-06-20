@@ -5,6 +5,8 @@ public class User
     public int Id {get; set;}
     public bool Verified {get; set;}
     public string? Photo {get; set;}
+    public string? About {get; set;}
+    public string? Headline {get; set;}
     public required string Username {get; set;}
     public required string FirstName {get; set;}
     public required string LastName {get; set;}
@@ -13,6 +15,10 @@ public class User
     public required string Email {get; set;}
     public DateTime CreatedAt {get; set;}
 
+    public List<Friends> Friends {get; set;} = new List<Friends>();
+    public List<Friends> FriendOf {get; set;} = new List<Friends>();
+    public List<FriendRequestNotification> FriendRequestNotifications {get; set;} = new List<FriendRequestNotification>();
+    public List<PostNotification> PostNotifications {get; set;} = new List<PostNotification>();
     public virtual List<Story> Stories {get; set;} = new List<Story>();
     public virtual List<Reply> Replies {get; set;} = new List<Reply>();
     public virtual List<Post> Posts {get; set;} = new List<Post>();
@@ -37,6 +43,8 @@ public class UserFullDto
     public string Privacy {get; set;}
     public string Email {get; set;}
     public DateTime CreatedAt {get; set;}
+    public string? About {get; set;}
+    public string? Headline {get; set;}
 
     public virtual List<PostDto> Posts {get; set;} = new List<PostDto>();
     public virtual List<StoryDto> Stories {get; set;} = new List<StoryDto>();
@@ -52,8 +60,10 @@ public class UserFullDto
         Email = user.Email;
         CreatedAt = user.CreatedAt;
         Privacy = user.Privacy;
-        Posts = user.Posts.Select(p => new PostDto(p)).ToList();
-        Stories = user.Stories.Select(s => new StoryDto(s)).ToList();
+        About = user.About;
+        Headline = user.Headline;
+        Posts = user.Posts.Select(p => new PostDto(p)).OrderByDescending(p => p.CreatedAt).ToList();
+        Stories = user.Stories.Select(s => new StoryDto(s)).OrderByDescending(p => p.CreatedAt).ToList();
     }
 }
 
@@ -68,6 +78,8 @@ public class UserDto
     public string LastName {get; set;}
     public string Privacy {get; set;}
     public string Email {get; set;}
+    public string? About {get; set;}
+    public string? Headline {get; set;}
     public DateTime CreatedAt {get; set;}
 
     public UserDto(User user)
@@ -81,5 +93,7 @@ public class UserDto
         Email = user.Email;
         CreatedAt = user.CreatedAt;
         Privacy = user.Privacy;
+        About = user.About;
+        Headline = user.Headline;
     }
 }

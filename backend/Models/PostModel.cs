@@ -6,8 +6,10 @@ public class Post
     public string? Photo {get; set;}
     public string? Caption {get; set;}
     public required string Privacy {get; set;}
+    public required string Type {get; set;}
     public DateTime CreatedAt {get; set;}
 
+    public List<PostNotification> PostNotifications {get; set;} = new List<PostNotification>();
     public virtual User User {get; set;} = null!;
     public virtual List<Reply> Replies {get; set;} = new List<Reply>();
     public virtual List<Comment> Comments {get; set;} = new List<Comment>();
@@ -25,6 +27,7 @@ public class PostDto
     public string? UserPhoto {get; set;}
     public string? Username {get; set;}
     public string Privacy {get; set;}
+    public string Type {get; set;}
     public DateTime CreatedAt {get; set;}
 
     public List<ReplyDto> Replies {get; set;} = new List<ReplyDto>();
@@ -41,6 +44,7 @@ public class PostDto
         CreatedAt = post.CreatedAt;
         UserPhoto = post.User.Photo;
         Username = post.User.Username;
+        Type = post.Type;
         Replies = post.Replies.Select(r => new ReplyDto(r)).ToList();
         Comments = post.Comments.Select(c => new CommentDto(c)).ToList();
         Reactions = post.Reactions.Select(rp => new ReactionPostDto(rp)).ToList();

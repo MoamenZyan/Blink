@@ -20,6 +20,9 @@ public class DatabaseContext : DbContext
     public DbSet<GroupAdmin> GroupAdmins {get; set;}
     public DbSet<GroupUser> GroupUsers {get; set;}
     public DbSet<Story> Stories {get; set;}
+    public DbSet<PostNotification> PostNotifications {get; set;}
+    public DbSet<FriendRequestNotification> FriendRequestNotifications {get; set;}
+    public DbSet<Friends> Friends {get; set;}
 
     // Load Configuration From Assembly
     protected override void OnModelCreating(ModelBuilder modelBuilder)

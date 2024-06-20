@@ -1,0 +1,67 @@
+.list {
+    border-radius: 10px;
+    position: absolute;
+    left: -50px;
+    top: 150px;
+    background-color: white;
+    box-shadow: 0px 3px 20px -2px rgb(69, 68, 68);
+    width: 300px;
+    z-index: 50;
+    padding: 10px;
+}
+
+
+.line {
+    display: block;
+    height: 2px;
+    background-color: rgb(197, 190, 190);
+    width: 100%;
+    margin: 0 auto;
+    margin: 10px 0;
+}
+
+.list::after {
+    position: absolute;
+    content: "";
+    border-width: 15px;
+    border-color: transparent transparent white transparent;
+    border-style: solid;
+    left: 50%;
+    top: -25px;
+    transform: translateX(-50%);
+}
+
+.user_photo {
+    margin-right: 10px;
+    mask: url("./assets/user_photo.svg") no-repeat center;
+    background-color: #333333;
+    width: 30px;
+    height: 30px;
+}
+
+.button {
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.upload_photo {
+    margin-right: 10px;
+    mask: url("./assets/photos.svg") no-repeat center;
+    background-color: #333333;
+    width: 30px;
+    height: 30px;
+}
+
+.button input {
+    display: none;
+}
+
+.story {
+    margin-right: 10px;
+    mask: url("./assets/story.svg") no-repeat center;
+    background-color: #333333;
+    width: 30px;
+    height: 30px;
+}

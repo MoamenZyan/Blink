@@ -1,4 +1,5 @@
 
+// To logout user from website
 const baseURL = "http://localhost:8080/api/v1";
 export default function Logout() {
     return fetch(`${baseURL}/user/logout`, {

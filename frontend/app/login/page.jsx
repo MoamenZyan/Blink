@@ -17,6 +17,7 @@ export default function LoginPage() {
         const result = await Login(new FormData(form.current));
         if (result.status) {
             localStorage.setItem('userId', result.id);
+            localStorage.setItem('userName', result.username);
             router.push("/");
             setLoading(false);
         } else {

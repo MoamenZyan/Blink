@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import styles from "./header.module.css";
 import NotificationList from "../notificationList/notificationList.module";
 
-export default function Header(props) {
+export default function Header({overlay}) {
     const router = useRouter();
     const [tab, setTab] = useState(window.location.pathname);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -26,8 +26,8 @@ export default function Header(props) {
                             <div onClick={() => {router.push("/")}} className={`${styles.button_wrapper} ${tab == "/" && styles.button_wrapper_active}`}>
                                 <div className={`${styles.button} ${styles.home} ${tab == "/" && styles.active}`}></div>
                             </div>
-                            <div onClick={() => {router.push("/profile/moamen")}} className={`${styles.button_wrapper} ${tab.includes("/profile") && styles.button_wrapper_active}`}>
-                                <div className={`${styles.button} ${styles.user} ${tab.includes("/profile") && styles.active}`}></div>
+                            <div onClick={() => {router.push(`/profile/${localStorage.getItem("userName")}`)}} className={`${styles.button_wrapper} ${tab.includes(`/profile/${localStorage.getItem("userName")}`) && styles.button_wrapper_active}`}>
+                                <div className={`${styles.button} ${styles.user} ${tab.includes(`/profile/${localStorage.getItem("userName")}`) && styles.active}`}></div>
                             </div>
                             <div className={`${styles.button_wrapper} ${tab == "/explore" && styles.button_wrapper_active}`}>
                                 <div className={`${styles.button} ${styles.explore} ${tab == "/explore" && styles.active}`}></div>
@@ -53,6 +53,7 @@ export default function Header(props) {
                         }
                     </div>
                 </div>
+                {overlay && <div className={styles.overlay}></div>}
             </div>
         </>
     );

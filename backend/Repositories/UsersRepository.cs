@@ -44,24 +44,25 @@ public class UsersRepository : IRepository<User>
     // Method to get all users from database
     public async Task<List<User>?> GetAllAsync()
     {
-        var users = await _context.Users.ToListAsync();
-        List<User> Users = new List<User>();
-        if (users is not null)
-        {
-            foreach(User user in users)
-                Users.Add(user);
-            return Users;
-        }
-        else
-        {
-            return null;
-        }
+        var users = await _context.Users.Include(u => u.Posts)
+                                            .ThenInclude(p => p.Reactions)
+                                        .Include(u => u.Posts)
+                                            .ThenInclude(p => p.Comments)
+                                        .Include(u => u.Stories).ToListAsync();
+        return users;
     }
 
     // Method that filter users by delegate function
-    public IEnumerable<User> Filter(Func<User, bool> func)
+    public List<User> Filter(Func<User, bool> func)
     {
-        List<User>? users = _context.Users.Where(func).ToList();
+        List<User>? users = _context.Users
+                            .Include(u => u.Posts)
+                                .ThenInclude(p => p.Reactions)
+                            .Include(u => u.Posts)
+                                .ThenInclude(p => p.Comments)
+                            .Include(u => u.Stories)
+                            .Where(func)
+                            .ToList();
         return users;
     }
 

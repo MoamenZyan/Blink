@@ -5,10 +5,11 @@
     margin-top: 130px;
     min-width: 250px;
     max-width: 360px;
-    width: 80%;
     height: max-content;
     box-shadow: 0px 5px 10px 0px rgb(184, 182, 182);
     border-radius: 25px;
+    background-color: white;
+    left: 5%;
 }
 
 .parent_overlay {
@@ -45,15 +46,17 @@
 }
 
 .info {
+    cursor: pointer;
     display: flex;
 }
 
 .photo {
-    width: 100px;
-    height: 100px;
-    background-color: var(--dark-yellow);
-    mask: url("./assets/user_default.svg") no-repeat center;
-    -webkit-mask: url("./assets/user_default.svg") no-repeat center;
+    border: 5px solid var(--dark-yellow);
+    width: 85px;
+    height: 85px;
+    margin-right: 10px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 .user_info_details {
@@ -83,9 +86,14 @@
     background-color: var(--dark-yellow);
 }
 
-.headline {
-    font-size: 11pt;
+.about {
+    font-weight: 700;
+    font-size: 12pt;
     margin-bottom: 10px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .location p {
@@ -141,6 +149,8 @@
 }
 
 .list {
+    position: relative;
+    top: -30px;
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease-out;
@@ -219,7 +229,6 @@
     cursor: pointer;
     display: flex;
     align-items: center;
-    margin-bottom: 30px;
     font-weight: 700;
 }
 

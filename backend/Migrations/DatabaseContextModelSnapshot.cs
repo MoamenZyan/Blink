@@ -55,6 +55,48 @@ namespace backend.Migrations
                     b.ToTable("Comments", (string)null);
                 });
 
+            modelBuilder.Entity("FriendRequestNotification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<int>("OwnerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("FriendRequestNotifications", (string)null);
+                });
+
+            modelBuilder.Entity("Friends", b =>
+                {
+                    b.Property<int>("UserId1")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId2")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("UserId1", "UserId2");
+
+                    b.HasIndex("UserId2");
+
+                    b.ToTable("Friends", (string)null);
+                });
+
             modelBuilder.Entity("Group", b =>
                 {
                     b.Property<int>("Id")
@@ -148,6 +190,11 @@ namespace backend.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("VARCHAR");
 
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
@@ -158,6 +205,40 @@ namespace backend.Migrations
                     b.ToTable("Posts", (string)null);
                 });
 
+            modelBuilder.Entity("PostNotification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("VARCHAR");
+
+                    b.Property<int>("OwnerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PostNotifications", (string)null);
+                });
+
             modelBuilder.Entity("ReactionComment", b =>
                 {
                     b.Property<int>("CommentId")
@@ -165,9 +246,6 @@ namespace backend.Migrations
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
-
-                    b.Property<bool>("Type")
-                        .HasColumnType("tinyint(1)");
 
                     b.HasKey("CommentId", "UserId");
 
@@ -184,9 +262,6 @@ namespace backend.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("Type")
-                        .HasColumnType("tinyint(1)");
-
                     b.HasKey("PostId", "UserId");
 
                     b.HasIndex("UserId");
@@ -201,9 +276,6 @@ namespace backend.Migrations
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
-
-                    b.Property<bool>("Type")
-                        .HasColumnType("tinyint(1)");
 
                     b.HasKey("ReplyId", "UserId");
 
@@ -259,6 +331,9 @@ namespace backend.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("BackgroundColor")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Content")
                         .HasMaxLength(1024)
                         .HasColumnType("VARCHAR");
@@ -274,6 +349,9 @@ namespace backend.Migrations
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("VARCHAR");
+
+                    b.Property<string>("TextColor")
+                        .HasColumnType("longtext");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -293,6 +371,10 @@ namespace backend.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("About")
+                        .HasMaxLength(1024)
+                        .HasColumnType("VARCHAR");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime");
 
@@ -304,6 +386,10 @@ namespace backend.Migrations
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(50)
+                        .HasColumnType("VARCHAR");
+
+                    b.Property<string>("Headline")
+                        .HasMaxLength(144)
                         .HasColumnType("VARCHAR");
 
                     b.Property<string>("LastName")
@@ -358,6 +444,36 @@ namespace backend.Migrations
                     b.Navigation("Post");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FriendRequestNotification", b =>
+                {
+                    b.HasOne("User", "User")
+                        .WithMany("FriendRequestNotifications")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Friends", b =>
+                {
+                    b.HasOne("User", "User1")
+                        .WithMany("Friends")
+                        .HasForeignKey("UserId1")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("User", "User2")
+                        .WithMany("FriendOf")
+                        .HasForeignKey("UserId2")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User1");
+
+                    b.Navigation("User2");
                 });
 
             modelBuilder.Entity("Group", b =>
@@ -416,6 +532,25 @@ namespace backend.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("PostNotification", b =>
+                {
+                    b.HasOne("Post", "Post")
+                        .WithMany("PostNotifications")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("User", "User")
+                        .WithMany("PostNotifications")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
 
                     b.Navigation("User");
                 });
@@ -533,6 +668,8 @@ namespace backend.Migrations
                 {
                     b.Navigation("Comments");
 
+                    b.Navigation("PostNotifications");
+
                     b.Navigation("Reactions");
 
                     b.Navigation("Replies");
@@ -549,9 +686,17 @@ namespace backend.Migrations
 
                     b.Navigation("Comments");
 
+                    b.Navigation("FriendOf");
+
+                    b.Navigation("FriendRequestNotifications");
+
+                    b.Navigation("Friends");
+
                     b.Navigation("MemberOfGroups");
 
                     b.Navigation("OwnedGroups");
+
+                    b.Navigation("PostNotifications");
 
                     b.Navigation("Posts");
 

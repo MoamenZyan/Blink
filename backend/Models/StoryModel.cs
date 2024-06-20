@@ -5,6 +5,8 @@ public class Story
     public int UserId {get; set;}
     public string? Photo {get; set;}
     public string? Content {get; set;}
+    public string? BackgroundColor {get; set;}
+    public string? TextColor {get; set;}
     public required string Privacy {get; set;}
     public DateTime CreatedAt {get; set;}
 
@@ -18,6 +20,8 @@ public class StoryFullDto
     public string? Photo {get; set;}
     public string? Content {get; set;}
     public string Privacy {get; set;}
+    public string? BackgroundColor {get; set;}
+    public string? TextColor {get; set;}
     public DateTime CreatedAt {get; set;}
 
     public virtual UserDto User {get; set;} = null!;
@@ -28,6 +32,8 @@ public class StoryFullDto
         Photo = story.Photo;
         Content = story.Content;
         Privacy = story.Privacy;
+        BackgroundColor = story.BackgroundColor;
+        TextColor = story.TextColor;
         CreatedAt = story.CreatedAt;
         User = new UserDto(story.User);
     }
@@ -41,6 +47,10 @@ public class StoryDto
     public string? Photo {get; set;}
     public string? Content {get; set;}
     public string Privacy {get; set;}
+    public string? BackgroundColor {get; set;}
+    public string? TextColor {get; set;}
+    public string Username {get; set;}
+    public string? UserPhoto {get; set;}
     public DateTime CreatedAt {get; set;}
 
     public StoryDto(Story story)
@@ -50,6 +60,10 @@ public class StoryDto
         Photo = story.Photo;
         Content = story.Content;
         Privacy = story.Privacy;
+        BackgroundColor = story.BackgroundColor;
+        TextColor = story.TextColor;
         CreatedAt = story.CreatedAt;
+        Username = story.User.Username;
+        UserPhoto = story.User.Photo;
     }
 }

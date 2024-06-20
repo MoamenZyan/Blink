@@ -29,9 +29,9 @@ public class PostsRepository : IRepository<Post>
     }
 
     // Filter Posts On Specific Criteria
-    public IEnumerable<Post> Filter(Func<Post, bool> func)
+    public List<Post> Filter(Func<Post, bool> func)
     {
-        var results =  _context.Posts.Where(func).ToList();
+        var results =  _context.Posts.Where(func).OrderByDescending(p => p.CreatedAt).ToList();
         return results;
     }
 
@@ -41,8 +41,10 @@ public class PostsRepository : IRepository<Post>
         List<Post> posts = await _context.Posts
             .Include(p => p.User)
             .Include(p => p.Reactions)
+                .ThenInclude(p => p.User)
             .Include(p => p.Comments)
             .Include(p => p.Replies)
+            .OrderByDescending(p => p.CreatedAt)
             .ToListAsync();
 
         return posts;

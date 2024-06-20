@@ -1,12 +1,17 @@
 .head {
-    display: flex;
-    justify-content: space-between;
+    position: relative;
+    height: 220px;
 }
 
 .banner_photo_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
     background: url("./assets/banner.png") no-repeat center;
-    width: 100%;
+    width: 95%;
     height: 280px;
+    border-bottom-left-radius: 50px;
 }
 
 .user_info {
@@ -16,7 +21,7 @@
 
 .user_info_details {
     font-size: 10pt;
-    margin-bottom: 110px;
+    margin-bottom: 80px;
     margin-left: 10px;
 }
 
@@ -24,14 +29,87 @@
     color: gray;
 }
 
-.user_photo_div {
+.user_photo_wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 80px;
+}
+
+.spinner {
+    position: absolute;
+}
+
+.default_user_photo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border: 10px solid white;
     position: relative;
     bottom: 50px;
-    background: url("./assets/profile_photo.png") no-repeat center;
-    background-size: 100%;
-    width: 200px;
-    height: 200px;
+    background: url("./assets/user_default.svg") no-repeat center;
+    background-color: white;
+    width: 190px;
+    height: 190px;
     border-radius: 50%;
+    transition: 0.2s;
+}
+
+.default_user_photo:hover {
+    filter: grayscale(0.5);
+    background-color: rgb(224, 217, 217);
+    transition: 0.2s;
+}
+
+
+.default_user_photo:hover > .camera {
+    transition: 0.2s ease-in-out;
+    mask: url("./assets/camera.svg") no-repeat center;
+    width: 50px;
+    height: 50px;
+    background-color: gray;
+    opacity: 1;
+}
+
+.wrapper {
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    bottom: 50px;
+}
+
+.profile_photo {
+    cursor: pointer;
+    width: 190px;
+    height: 190px;
+    border-radius: 50%;
+    border-width: 10px;
+    border-style: solid;
+    overflow: hidden;
+    object-fit: cover;
+    box-shadow: 0px 0px 10x 5px black;
+}
+
+.wrapper:hover > .profile_photo {
+    filter: brightness(110%);
+    
+}
+
+.wrapper:hover > .camera {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    mask: url("./assets/camera.svg") no-repeat center;
+    width: 50px;
+    height: 50px;
+    background-color: gray;
+    opacity: 1;
 }
 
 .friends {
@@ -45,13 +123,13 @@
 
 .friend_photo {
     position: absolute;
-    background: url("./assets/profile_photo.png") no-repeat center;
-    background-size: cover;
+    background-color: white;
+    background: url("./assets/user_default.svg") no-repeat center;
+    background-size: 100%;
     width: 50px;
     height: 50px;
     left: 0;
-    margin-left: -15px; 
-    border: 5px solid rgb(255, 255, 255);
+    margin-left: -15px;
     border-radius: 50%;
 }
 
@@ -99,11 +177,14 @@
 }
 
 .user_settings {
+    position: absolute;
     display: flex;
     justify-content: center;
     align-items: flex-end;
     margin-right: 10px;
     margin-bottom: 20px;
+    right: 10px;
+    bottom: 0;
 }
 
 .user_settings button {
@@ -127,11 +208,60 @@
 }
 
 .about {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     width: 80%;
     margin: 10px auto;
 }
 
 .about h4 {
+    margin-right: auto;
     font-weight: 700;
     margin-bottom: 20px;
+}
+
+.about p {
+    text-align: center;
+}
+
+.about button {
+    margin-left: auto;
+    cursor: pointer;
+    color: white;
+    font-size: 12pt;
+    font-weight: 700;
+    margin-top: 20px;
+    border: none;
+    outline: none;
+    padding: 5px 30px;
+    border-radius: 25px;
+    background-color: var(--light-yellow);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bio_textarea {
+    position: relative;
+    min-width: 100%;
+    max-width: 500px;
+    min-height: 100px;
+    max-height: 200px;
+    padding: 10px;
+    border-radius: 25px;
+    width: 100%;
+    outline: none;
+    border: 2px solid var(--dark-yellow);
+}
+
+.bio_textarea textarea {
+    min-width: 100%;
+    max-width: 100%;
+    min-height: 100px;
+    max-height: 100px;
+    border: none;
+    outline: none;
+    resize: none;
 }

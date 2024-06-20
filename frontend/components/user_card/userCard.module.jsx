@@ -3,9 +3,10 @@ import Cookies from "js-cookie";
 import styles from "./userCard.module.css";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import Logout from "@/ApiHelper/Authentication/logout";
 
-export default function UserCard(props) {
+export default function UserCard({user}) {
     const router = useRouter();
     const [list, setList] = useState(false);
     const [isLogged, setIsLogged] = useState(false);
@@ -13,18 +14,25 @@ export default function UserCard(props) {
     const handleLogout = async () => {
         if (await Logout()) {
             localStorage.removeItem('userId');
+            localStorage.removeItem('userName');
             Cookies.remove("jwt");
             router.push("/login")
         }
     }
+
     const listClick = () => {
         setList(!list);
     }
+
     useEffect(() => {
         const token = Cookies.get("jwt");
         if (token) setIsLogged(true);
-        console.log(token);
     }, []);
+
+    if (!user) {
+        return <div>Loading...</div>;
+    }
+
     return (
         <>
             <div className={`${styles.card}`}>
@@ -34,13 +42,15 @@ export default function UserCard(props) {
                     </div>
                     <div className={`${styles.overlay}`}></div>
                 </div>}
-                <div className={styles.info}>
+                <div onClick={() => {router.push(`/profile/${localStorage.getItem("userName")}`)}} className={styles.info}>
                     <div className={styles.user_photo}>
-                        <div className={styles.photo}></div>
+                        {user.photo == "null" ? <Image src={"/assets/user_default.svg"} width={80} height={80} alt="" /> :
+                        <img className={styles.photo} src={user.photo} alt=""/>
+                        }
                     </div>
                     <div className={styles.user_info}>
                         <div>
-                            <h2>Moamen Zyan</h2>
+                            <h2>{user.firstName} {user.lastName}</h2>
                         </div>
                         <div className={styles.user_info_details}>
                             <div className={styles.followings}>
@@ -53,25 +63,24 @@ export default function UserCard(props) {
                             </div>
                             <div className={styles.posts}>
                                 <h4>Posts</h4>
-                                <p>369</p>
+                                <p>{user.posts.$values.length}</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <span className={styles.line}></span>
                 <div className={styles.more_info}>
-                    <div className={styles.headline}>
-                        <h3>Software Engineer</h3>
+                    <div className={styles.about}>
+                        <p>{user.about}</p>
                     </div>
                     <div className={styles.location}>
                         <p>Egypt, Alexandria</p>
                     </div>
                     <div className={styles.email}>
-                        <p>moamenzyan20@gmail.com</p>
+                        <p>{user.email}</p>
                     </div>
                 </div>
                 <div className={`${styles.list} ${list ? styles.open : ''}`}>
-                    <span className={styles.line}></span>
                     <div className={styles.account}>
                         <div className={styles.account_icon}></div>
                         <p>Account Management</p>

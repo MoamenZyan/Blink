@@ -31,7 +31,7 @@ public class AuthenticationController : Controller
             var body = await new FormReader(Request.Body).ReadFormAsync();
             if (body is not null)
             {
-                (bool, int) result = _userService.UserLogin(Convert.ToString(body["Username"]), Convert.ToString(body["Password"]));
+                (bool, int, string) result = _userService.UserLogin(Convert.ToString(body["Username"]), Convert.ToString(body["Password"]));
                 if (result.Item1)
                 {
                     var token = JwtService.GenerateToken(result.Item2);
@@ -46,7 +46,7 @@ public class AuthenticationController : Controller
                         Expires=DateTime.UtcNow.AddDays(30),
                         HttpOnly=false,
                     });
-                    return new JsonResult(new {status=true,message="user authorized",Id=result.Item2}){StatusCode=200};
+                    return new JsonResult(new {status=true,message="user authorized",Id=result.Item2, username=result.Item3}){StatusCode=200};
                 }
                 else
                 {

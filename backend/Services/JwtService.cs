@@ -42,11 +42,11 @@ public class JwtService
             if (userId is not null)
                 return Convert.ToInt32(userId);
             else
-                return default(int);
+                return default;
         }
         else
         {
-            return default(int);
+            return default;
         }
     }
 }

@@ -1,8 +1,9 @@
-using System.Text.Json.Serialization;
-using StackExchange.Redis;
+
 using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using StackExchange.Redis;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,8 +37,15 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Conn
 builder.Services.AddScoped<IRedisCache, RedisCache>();
 builder.Services.AddScoped<IRepository<Post>, PostsRepository>();
 builder.Services.AddScoped<IRepository<User>, UsersRepository>();
+builder.Services.AddScoped<IRepository<ReactionPost>, ReactionsPostRepository>();
+builder.Services.AddScoped<IRepository<ReactionComment>, ReactionsCommentRepository>();
+builder.Services.AddScoped<IRepository<ReactionReply>, ReactionsReplyRepository>();
+builder.Services.AddScoped<IRepository<Story>, StoriesRepository>();
+builder.Services.AddScoped<StoryService>();
+builder.Services.AddScoped<ReactionService>();
 builder.Services.AddScoped<PostService>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<UploadPhotoService>();
 
 // To prevent reference cycle
 builder.Services.AddControllers()

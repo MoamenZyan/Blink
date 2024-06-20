@@ -18,7 +18,7 @@ public class UsersController : Controller
     public async Task<IActionResult> GetUsers()
     {
         var users = await _userService.GetAllAsync();
-        if (users is not null)
+        if (users!.Count > 0)
             return new JsonResult(new {status=true,users=users});
         else
             return new JsonResult(new {status=false, message="no users found"}){StatusCode=404};
@@ -29,14 +29,14 @@ public class UsersController : Controller
     /// </summary>
     /// <response code="200">User Found</response>
     /// <response code="404">No User Found With That Id</response>
-    [HttpGet("/api/v1/user/{id}")]
-    public async Task<IActionResult> GetUser(int id)
+    [HttpGet("/api/v1/user/{username}")]
+    public IActionResult GetUserByName(string username)
     {
-        var user = await _userService.GetUserByIdAsync(id);
+        var user = _userService.GetByUsername(username);
         if (user is not null)
             return new JsonResult(new {status=true,user=user});
         else
-            return new JsonResult(new {status=false, message=$"no user found with id {id}"}){StatusCode=404};
+            return new JsonResult(new {status=false, message=$"no user found with username {username}"}){StatusCode=404};
     }
 
 
@@ -88,6 +88,27 @@ public class UsersController : Controller
         }
     }
 
+    [HttpPost("/api/v1/user-photo")]
+    public async Task<IActionResult> UploadPhoto(IFormFile photo)
+    {
+        if (photo is null || photo.Length == 0)
+            return BadRequest("No photo uploaded");
+
+        var userId = JwtService.VerifyToken(Convert.ToString(Request.Cookies["jwt"])!);
+        if (userId is not default(int))
+        {
+            var result = await _userService.UploadProfilePhoto(photo, userId);
+            if (result is false)
+                return new JsonResult(new {status=false,message="error in uploading photo"}){StatusCode=500};
+            else
+                return Ok("photo uploaded successfully");
+        }
+        else
+        {
+            return new JsonResult(new {status=false,message="corrupted token"}){StatusCode=422};
+        }
+    }
+
     [HttpGet("/api/v1/user/logout")]
     public IActionResult Logout()
     {
@@ -107,5 +128,21 @@ public class UsersController : Controller
             Console.WriteLine(exp);
             return StatusCode(500, "Internal Server Error");
         }
+    }
+
+    [HttpPost("/api/v1/user-about")]
+    public async Task<IActionResult> UpdateAbout()
+    {
+        var UserId = JwtService.VerifyToken(Request.Cookies["jwt"]!);
+        if (UserId == default(int))
+            return new JsonResult(new {status=false,message="corrupted token"}){StatusCode=422};
+        var body = await new FormReader(Request.Body).ReadFormAsync();
+        if (body is null)
+            return BadRequest("body is null");
+        var result = await _userService.UpdateAbout(UserId, body);
+        if (result is true)
+            return Ok("about updated");
+        else
+            return StatusCode(500, "internal server error");
     }
 }

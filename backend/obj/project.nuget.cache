@@ -1,11 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "xXpO+pdpofw=",
+  "dgSpecHash": "T01EnfytbdE=",
   "success": true,
   "projectFilePath": "/home/moamenzyan/Blink/backend/backend.csproj",
   "expectedPackageFiles": [
     "/home/moamenzyan/.nuget/packages/anglesharp/1.1.2/anglesharp.1.1.2.nupkg.sha512",
     "/home/moamenzyan/.nuget/packages/anglesharp.css/1.0.0-beta.139/anglesharp.css.1.0.0-beta.139.nupkg.sha512",
+    "/home/moamenzyan/.nuget/packages/awssdk.core/3.7.304.16/awssdk.core.3.7.304.16.nupkg.sha512",
+    "/home/moamenzyan/.nuget/packages/awssdk.s3/3.7.309.4/awssdk.s3.3.7.309.4.nupkg.sha512",
     "/home/moamenzyan/.nuget/packages/azure.core/1.35.0/azure.core.1.35.0.nupkg.sha512",
     "/home/moamenzyan/.nuget/packages/azure.identity/1.10.3/azure.identity.1.10.3.nupkg.sha512",
     "/home/moamenzyan/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",

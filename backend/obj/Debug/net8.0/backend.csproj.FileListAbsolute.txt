@@ -147,3 +147,5 @@
 /home/moamenzyan/Blink/backend/bin/Debug/net8.0/zh-Hant/Microsoft.CodeAnalysis.Workspaces.resources.dll
 /home/moamenzyan/Blink/backend/bin/Debug/net8.0/Pipelines.Sockets.Unofficial.dll
 /home/moamenzyan/Blink/backend/bin/Debug/net8.0/StackExchange.Redis.dll
+/home/moamenzyan/Blink/backend/bin/Debug/net8.0/AWSSDK.Core.dll
+/home/moamenzyan/Blink/backend/bin/Debug/net8.0/AWSSDK.S3.dll

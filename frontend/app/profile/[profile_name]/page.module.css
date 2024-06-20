@@ -1,3 +1,8 @@
+.parent {
+    position: relative;
+    background-color: rgb(249, 249, 249);
+    min-height: 100vh;
+}
 .container {
     width: 90%;
     margin: auto;
@@ -10,9 +15,8 @@
 }
 
 .center {
-    border-left: 1px solid rgb(222, 222, 222);
-    border-right: 1px solid rgb(222, 222, 222);
     width: 70%;
+    max-width: 1000px;
 }
 
 .right {

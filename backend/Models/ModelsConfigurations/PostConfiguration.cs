@@ -29,6 +29,11 @@ public class PostConfiguration : IEntityTypeConfiguration<Post>
             .HasColumnType("VARCHAR")
             .HasMaxLength(20)
             .IsRequired();
+        
+        builder.Property(p => p.Type)
+                .HasColumnType("VARCHAR")
+                .HasMaxLength(50)
+                .IsRequired();
 
         // Relation With User
         builder.HasOne(p => p.User)

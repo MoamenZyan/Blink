@@ -34,7 +34,7 @@
             <response code="404">No post found</response>
             <response code="500">Internal server error</response>
         </member>
-        <member name="M:PostsController.CreatePost(System.Object)">
+        <member name="M:PostsController.CreatePost">
              <summary>
              To create post
              </summary>
@@ -49,7 +49,6 @@
                  }
             
              </remarks>
-             <param name="data">JSON data that has post info</param>
              <response code="201">Post Created</response>
              <response code="400">Json is null</response>
              <response code="401">Unauthenticated user / Invalid or expired JWT token</response>
@@ -81,7 +80,7 @@
             <response code="200">Got Users</response>
             <response code="404">No Users Found</response>
         </member>
-        <member name="M:UsersController.GetUser(System.Int32)">
+        <member name="M:UsersController.GetUserByName(System.String)">
             <summary>
             Get Specific User By Id
             </summary>
@@ -115,6 +114,66 @@
         <member name="M:backend.Migrations.Initial.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:backend.Migrations.postnotificationconfiguration">
+            <inheritdoc />
+        </member>
+        <member name="M:backend.Migrations.postnotificationconfiguration.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:backend.Migrations.postnotificationconfiguration.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:backend.Migrations.postnotificationconfiguration.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:backend.Migrations.notification">
+            <inheritdoc />
+        </member>
+        <member name="M:backend.Migrations.notification.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:backend.Migrations.notification.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:backend.Migrations.notification.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:backend.Migrations.friends">
+            <inheritdoc />
+        </member>
+        <member name="M:backend.Migrations.friends.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:backend.Migrations.friends.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:backend.Migrations.friends.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:backend.Migrations.reaction">
+            <inheritdoc />
+        </member>
+        <member name="M:backend.Migrations.reaction.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:backend.Migrations.reaction.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:backend.Migrations.reaction.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:backend.Migrations.story">
+            <inheritdoc />
+        </member>
+        <member name="M:backend.Migrations.story.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:backend.Migrations.story.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:backend.Migrations.story.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
         <member name="M:UserService.AddUserAsync(System.Collections.Generic.Dictionary{System.String,Microsoft.Extensions.Primitives.StringValues})">
             <summary>
             Do validation before adding user to database
@@ -140,6 +199,13 @@
             Filter method to filter user's by specific condition
             </summary>
             <param name="func">delegate of condition</param>
+            <returns>if there any metch it returns it, null otherwise</returns>
+        </member>
+        <member name="M:UserService.GetByUsername(System.String)">
+            <summary>
+            Filter method to filter user's by specific condition
+            </summary>
+            <param name="username">username of the user</param>
             <returns>if there any metch it returns it, null otherwise</returns>
         </member>
         <member name="M:UserService.Delete(System.Int32,System.String)">

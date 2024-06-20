@@ -1,5 +1,6 @@
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json.Linq;
 
 public class PostsController : Controller
@@ -69,29 +70,29 @@ public class PostsController : Controller
     ///     }
     ///
     /// </remarks>
-    /// <param name="data">JSON data that has post info</param>
     /// <response code="201">Post Created</response>
     /// <response code="400">Json is null</response>
     /// <response code="401">Unauthenticated user / Invalid or expired JWT token</response>
     /// <response code="500">Internal server error</response>
     [HttpPost("/api/v1/posts")]
-    public async Task<IActionResult> CreatePost([FromBody] Object data)
+    public async Task<IActionResult> CreatePost()
     {
         try
         {
+            var data = await Request.ReadFormAsync();
             if (data is null)
-                return BadRequest(new {status = false, message = "JSON data is null"});
-            var json = JObject.Parse(data.ToString()!);
-            Console.WriteLine(json);
-            // if (Request.Headers["jwt"] is null)
-            //     return Unauthorized(new {status = false, message = "Unauthenticated user"});
-            
-            var userId = JwtService.VerifyToken(Request.Headers["jwt"]!);
-            if (userId is default(int))
-                return Unauthorized(new { status = false, message = "Invalid or expired JWT token" });
+                return BadRequest(new {status = false, message = "data is null"});
 
-            PostDto? post = await _postService.AddPost(userId, json);
-            return StatusCode(201, new {status=true, message="Post created successfully", post=post});
+            var body = data.ToDictionary(x => x.Key, x => x.Value);
+            var photo = data.Files.GetFile("Photo");
+
+            var token = JwtService.VerifyToken(Request.Cookies["jwt"]!);
+
+            if (token == default(int))
+                return Unauthorized(new {status = false, message = "Unauthenticated user"});
+
+            PostDto? post = await _postService.AddPost(token, body, photo!);
+            return StatusCode(201, new {status=true, message="Post created successfully"});
         }
         catch (Exception exp)
         {
@@ -116,7 +117,7 @@ public class PostsController : Controller
         {
             if (data is null)
                 return BadRequest(new {status = false, message = "JSON data is null"});
-            
+
             var json = JObject.Parse(data.ToString()!);
             if (Request.Cookies["jwt"] is null)
                 return Unauthorized(new {status = false, message = "Unauthenticated user"});

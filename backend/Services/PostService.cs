@@ -2,48 +2,53 @@ using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Ganss.Xss;
-using StackExchange.Redis;
 
 public class PostService
 {
     private readonly IRepository<Post> _postRepository;
     private readonly IRepository<User> _userRepository;
+    private readonly UploadPhotoService _uploadPhotoService;
     private readonly IRedisCache _redis;
-
+    private Guid uuid = Guid.NewGuid();
     private HtmlSanitizer sanitizer = new HtmlSanitizer();
 
-    public PostService(IRepository<Post> postsRepository, IRepository<User> userRepository, IRedisCache redis)
+    public PostService(IRepository<Post> postsRepository,
+                        IRepository<User> userRepository,
+                        IRedisCache redis,
+                        UploadPhotoService uploadPhotoService)
     {
         _postRepository = postsRepository;
         _userRepository = userRepository;
         _redis = redis;
+        _uploadPhotoService = uploadPhotoService;
     }
 
     // Add post to database
-    public async Task<PostDto?> AddPost(int id, JObject json)
+    public async Task<PostDto?> AddPost(int id, Dictionary<string, StringValues> body, IFormFile photo)
     {
-        var postsFromRedis = _redis.Get("posts");
+        var photoName = uuid.ToString();
+        if (photo is not null)
+        {
+           var res = await _uploadPhotoService.PostPhotoUpload(photo, photoName);
+           if (res is false)
+                throw new Exception("post photo didn't upload");
+        }
+
         Post post = new Post
         {
             UserId = id,
-            Photo = Convert.ToString(json["Photo"]), // Upload The Photo ******
-            Privacy = Convert.ToString(json["Privacy"])!,
-            Caption = sanitizer.Sanitize(Convert.ToString(json["Caption"])!),
+            Photo = photo == null ? "null" : $"https://blink-blog.s3.eu-north-1.amazonaws.com/postPhoto/{photoName}",
+            Privacy = Convert.ToString(body["Privacy"])!,
+            Caption = sanitizer.Sanitize(Convert.ToString(body["Caption"])!),
             CreatedAt = DateTime.Now,
+            Type = "normal"
         };
         var result = await _postRepository.AddAsync(post);
-        if (result is null) return null;
-        if (postsFromRedis is null)
-        {
-            var postsFromDb = await _postRepository.GetAllAsync();
-            _redis.Set("posts", JsonConvert.SerializeObject(postsFromDb, JsonSettings.DefaultSettings), new TimeSpan(1, 0, 0));
-        }
-        else
-        {
-            var posts = JsonConvert.DeserializeObject<List<Post>>(postsFromRedis)!.ToList();
-            posts.Add(post);
-            _redis.Set("posts", JsonConvert.SerializeObject(posts, JsonSettings.DefaultSettings), new TimeSpan(1, 0, 0));
-        }
+        if (result is null)
+            throw new Exception("error in adding post to database");
+
+        var postsFromDb = await _postRepository.GetAllAsync();
+        _redis.Set("posts", JsonConvert.SerializeObject(postsFromDb, JsonSettings.DefaultSettings), new TimeSpan(1, 0, 0));
         User? user = await _userRepository.GetByIdAsync(id);
         if (user is null)
             throw new Exception("There is no user associated with this post");
@@ -53,7 +58,7 @@ public class PostService
 
     public List<Post> Filter(Func<Post, bool> func)
     {
-        List<Post> posts = _postRepository.Filter(func)!.ToList();
+        List<Post> posts = _postRepository.Filter(func)!.OrderByDescending(p => p.CreatedAt).ToList();
         return posts;
     }
 
@@ -70,8 +75,11 @@ public class PostService
             _redis.Set("posts", JsonConvert.SerializeObject(posts, JsonSettings.DefaultSettings), new TimeSpan(1, 0, 0));
             return posts.Select(p => new PostDto(p)).ToList();
         }
-        var postsFromRedis = JsonConvert.DeserializeObject<List<Post>>(json)!;
-        return postsFromRedis.Select(p => new PostDto(p)).ToList();
+        else
+        {
+            var postsFromRedis = JsonConvert.DeserializeObject<List<Post>>(json)!;
+            return postsFromRedis.Select(p => new PostDto(p)).ToList();
+        }
     }
 
     public async Task<PostDto?> GetPostById(int id)

@@ -5,6 +5,7 @@
     border-top-color: #ffffff;
     border-radius: 100%;
     animation: spin 0.7s linear infinite;
+    z-index: 1000;
 }
 
 @keyframes spin {

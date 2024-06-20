@@ -1,0 +1,42 @@
+.list {
+    padding: 20px;
+    position: absolute;
+    top: 60px;
+    right: 5px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    background-color: white;
+    border-radius: 20px;
+    z-index: 10;
+}
+
+.list h4 {
+    margin-bottom: 20px;
+}
+
+.list p {
+    font-weight: 700;
+    border-radius: 20px;
+    padding: 5px;
+    background-color: rgb(241, 241, 241);
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.list p:last-child {
+    margin-bottom: 0;
+}
+
+.list .delete {
+    background-color: var(--pink);
+    color: white;
+}
+
+.list .edit {
+    background-color: var(--dark-yellow);
+    color: white;
+}
+
+

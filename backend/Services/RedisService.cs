@@ -1,11 +1,11 @@
 
 
+using System.Data.Common;
 using StackExchange.Redis;
 
 public class RedisCache : IRedisCache
 {
     private readonly IConnectionMultiplexer _redis;
-
     public RedisCache(IConnectionMultiplexer redis)
     {
         _redis = redis;
@@ -23,5 +23,33 @@ public class RedisCache : IRedisCache
     {
         IDatabase db = _redis.GetDatabase();
         db.StringSet(key, value, expiry);
+    }
+
+    // To Delete Cache
+    public void Del(string key)
+    {
+        IDatabase db = _redis.GetDatabase();
+        db.KeyDelete(key);
+    }
+
+    // Add Like To A Post In Cache
+    public void AddLike(int postId, int userId)
+    {
+        IDatabase db = _redis.GetDatabase();
+        db.SetAdd($"post:{postId}:likes", userId);
+    }
+
+    // Delete Like From A Post In Cache
+    public void DelLike(int postId, int userId)
+    {
+        IDatabase db = _redis.GetDatabase();
+        db.SetRemove($"post:{postId}:likes", userId);
+    }
+
+    // Check Weather User Has Like On A Post Or Not
+    public bool IsPostLikedByUser(int postId, int userId)
+    {
+        IDatabase db = _redis.GetDatabase();
+        return db.SetContains($"post:{postId}:likes", userId);
     }
 }
