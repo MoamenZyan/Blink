@@ -1,10 +1,11 @@
 "use client"
+import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import styles from "./profilePhotoList.module.css";
 
-export default function ProfilePhotoList({handleUpload, isMine, stories}) {
+export default function ProfilePhotoList({handleUpload, isMine, stories, id}) {
     const input = useRef(null);
-
+    const router = useRouter();
     const handleOnClick = () => {
         input.current.click();
     }
@@ -28,7 +29,7 @@ export default function ProfilePhotoList({handleUpload, isMine, stories}) {
                 </>}
                 {stories && <>
                     <span className={styles.line}></span>
-                    <div className={styles.button}>
+                    <div onClick={() => {router.push(`/stories/${id}`)}} className={styles.button}>
                         <div className={styles.story}></div>
                         <p>{isMine == true ? "See your story" : "See user story"}</p>
                     </div>

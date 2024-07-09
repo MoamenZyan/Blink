@@ -12,17 +12,20 @@ public class UserService
     private readonly IRepository<User> _userRepository;
     private readonly IRepository<Post> _postRepository;
     private readonly UploadPhotoService _uploadPhotoService;
+    private readonly IRepository<Friends> _friendRepository;
     private readonly IRedisCache _redis;
     private readonly HtmlSanitizer sanitizer = new HtmlSanitizer();
     private Guid uuid = Guid.NewGuid();
     public UserService(IRepository<User> userRepository, IRedisCache redis,
                         IRepository<Post> postRepository,
-                        UploadPhotoService uploadPhotoService)
+                        UploadPhotoService uploadPhotoService,
+                        IRepository<Friends> friendRepository)
     {
         _postRepository = postRepository;
         _userRepository = userRepository;
         _redis = redis;
         _uploadPhotoService = uploadPhotoService;
+        _friendRepository = friendRepository;
     }
 
     /// <summary>
@@ -44,6 +47,8 @@ public class UserService
                         Password = BCrypt.Net.BCrypt.EnhancedHashPassword(sanitizer.Sanitize(body["Password"]!), 10),
                         Email = sanitizer.Sanitize(body["Email"]!),
                         Photo = "null",
+                        Country = sanitizer.Sanitize(body["Country"]!),
+                        City = sanitizer.Sanitize(body["City"]!),
                         Verified = false,
                         CreatedAt = DateTime.Now,
                         Privacy = "public"
@@ -86,33 +91,15 @@ public class UserService
     }
 
     /// <summary>
-    /// Get specific user from database
-    /// </summary>
-    /// <param name="id">Id of the user</param>
-    /// <returns>If found returns user, null otherwise</returns>
-    public async Task<UserFullDto?> GetUserByIdAsync(int id)
-    {
-        // Get user from redis
-        var user = _redis.Get($"user?id={id}");
-        if (user is null)
-        {
-            var result = await _userRepository.GetByIdAsync(id);
-            if (result is null)
-                return null;
-            // Set user in redis
-            _redis.Set($"user?id={id}", JsonConvert.SerializeObject(result, JsonSettings.DefaultSettings), new TimeSpan(1, 0, 0));
-            return new UserFullDto(result);
-        }
-        User userFromRedis = JsonConvert.DeserializeObject<User>(user)!;
-        return new UserFullDto(userFromRedis);
-    }
-
-    /// <summary>
     /// Get all users from database
     /// </summary>
     /// <returns>if found returns users, null otherwise</returns>
-    public async Task<List<UserFullDto>?> GetAllAsync()
+    public async Task<List<UserFullDto>?> GetAllAsync(string token)
     {
+        var userId = JwtService.VerifyToken(token);
+        if (userId is default(int))
+            return null;
+
         // Get users from redis
         var json = _redis.Get("users");
         if (json is null)
@@ -122,11 +109,123 @@ public class UserService
                 return null;
             // Set users in redis
             _redis.Set("users", JsonConvert.SerializeObject(users, JsonSettings.DefaultSettings), new TimeSpan(1, 0, 0));
-            List<UserFullDto> userDtos = users.Select(u => new UserFullDto(u)).ToList();
+            List<UserFullDto> userDtos = users.Where(u => u.Id != userId).Select(u => new UserFullDto(u) {friendStatus = CheckFriendStatus(userId, u.Id)}).ToList();
             return userDtos;
         }
         List<User> usersFromRedis = JsonConvert.DeserializeObject<List<User>>(json)!;
-        return usersFromRedis.Select(u => new UserFullDto(u)).ToList();
+        return usersFromRedis.Where(u => u.Id != userId).Select(u => new UserFullDto(u) {friendStatus = CheckFriendStatus(userId, u.Id)}).ToList();
+    }
+
+    public async Task<List<UserFullDto>?> GetAllFriendsUsers(string token)
+    {
+        var userId = JwtService.VerifyToken(token);
+        if (userId is default(int))
+            return null;
+
+        // Get users from redis
+        var json = _redis.Get($"{userId}:friends");
+        if (json is null)
+        {
+            List<User>? users = await _userRepository.GetAllAsync();
+            if (users is null)
+                return null;
+            // Set users in redis
+            List<User> userDtos = users.Where(u => u.Id != userId)
+                    .Where(u => u.Friends.Any(f => f.Type == "accepted" && (f.UserId1 == userId || f.UserId2 == userId)) ||
+                                u.FriendOf.Any(f => f.Type == "accepted" && (f.UserId1 == userId || f.UserId2 == userId)))
+                    .ToList();
+            _redis.Set($"{userId}:friends", JsonConvert.SerializeObject(userDtos, JsonSettings.DefaultSettings), new TimeSpan(1, 0, 0));
+
+            return userDtos.Select(u => new UserFullDto(u) {friendStatus = CheckFriendStatus(userId, u.Id)}).ToList();
+        }
+        List<User>? usersFromRedis = JsonConvert.DeserializeObject<List<User>?>(json, JsonSettings.DefaultSettings)!;
+        return usersFromRedis
+                .Select(u => new UserFullDto(u) { friendStatus = CheckFriendStatus(userId, u.Id) })
+                .ToList();
+    }
+
+    public async Task<List<User>?> GetAllFriendsUsersForPosts(int userId)
+    {
+        // Get users from redis
+        var json = _redis.Get($"{userId}:friends");
+        if (json is null)
+        {
+            List<User>? users = await _userRepository.GetAllAsync();
+            if (users is null)
+                return null;
+            // Set users in redis
+            List<User> userDtos = users.Where(u => u.Id != userId)
+                    .Where(u => u.Friends.Any(f => f.Type == "accepted" && (f.UserId1 == userId || f.UserId2 == userId)) ||
+                                u.FriendOf.Any(f => f.Type == "accepted" && (f.UserId1 == userId || f.UserId2 == userId)))
+                    .ToList();
+            _redis.Set($"{userId}:friends", JsonConvert.SerializeObject(userDtos, JsonSettings.DefaultSettings), new TimeSpan(1, 0, 0));
+
+            return userDtos;
+        }
+        List<User>? usersFromRedis = JsonConvert.DeserializeObject<List<User>?>(json, JsonSettings.DefaultSettings)!;
+        return usersFromRedis;
+    }
+
+    public async Task<List<UserFullDto>?> GetAllNonFriendsUsers(string token)
+    {
+        var userId = JwtService.VerifyToken(token);
+        if (userId is default(int))
+            return null;
+
+        // Get users from redis
+        var json = _redis.Get($"{userId}:non-friends");
+        if (json is null)
+        {
+            List<User>? users = await _userRepository.GetAllAsync();
+            if (users is null)
+                return null;
+            // Set users in redis
+            List<User> userDtos = users.Where(u => u.Id != userId)
+                    .Where(u => !u.Friends.Any(f => f.Type == "accepted" && (f.UserId1 == userId || f.UserId2 == userId)) ||
+                                !u.FriendOf.Any(f => f.Type == "accepted" && (f.UserId1 == userId || f.UserId2 == userId)))
+                    .ToList();
+            _redis.Set($"{userId}:non-friends", JsonConvert.SerializeObject(userDtos, JsonSettings.DefaultSettings), new TimeSpan(1, 0, 0));
+
+            return userDtos.Select(u => new UserFullDto(u) {friendStatus = CheckFriendStatus(userId, u.Id)}).ToList();
+        }
+        List<User> usersFromRedis = JsonConvert.DeserializeObject<List<User>>(json)!;
+        return usersFromRedis.Where(u => u.Id != userId)
+                .Where(u => !u.Friends.Any(f => f.Type == "accepted" && (f.UserId1 == userId || f.UserId2 == userId)) &&
+                            !u.FriendOf.Any(f => f.Type == "accepted" && (f.UserId1 == userId || f.UserId2 == userId)))
+                .Select(u => new UserFullDto(u) { friendStatus = CheckFriendStatus(userId, u.Id) })
+                .ToList();
+    }
+
+    private string CheckFriendStatus(int currentUserId, int otherUserId)
+    {
+        if (currentUserId == otherUserId)
+            return "no friend request";
+        var fromRedis = _redis.Get($"friendStatus:{currentUserId}:{otherUserId}");
+        if (fromRedis is null)
+        {
+            var result = _friendRepository.Filter(f => f.UserId1 == currentUserId && f.UserId2 == otherUserId)?.FirstOrDefault();
+            _redis.Set($"friendStatus:{currentUserId}:{otherUserId}", JsonConvert.SerializeObject(result, JsonSettings.DefaultSettings), new TimeSpan(1, 0, 0));
+            if (result is null)
+                return "no friend request";
+            else if (result.Type == "pending")
+                return "pending";
+            else if (result.Type == "accepted")
+                return "friend";
+            else
+                return "no friend request";
+        }
+        else
+        {
+            Friends result = JsonConvert.DeserializeObject<Friends>(fromRedis)!;
+            if (result is null)
+                return "no friend request";
+            else if (result.Type == "pending")
+                return "pending";
+            else if (result.Type == "accepted")
+                return "friend";
+            else
+                return "no friend request";
+        }
     }
 
     /// <summary>
@@ -152,9 +251,14 @@ public class UserService
     /// Filter method to filter user's by specific condition
     /// </summary>
     /// <param name="username">username of the user</param>
+    /// <param name="token">token of the logged in user</param>
     /// <returns>if there any metch it returns it, null otherwise</returns>
-    public UserFullDto? GetByUsername(string username)
+    public UserFullDto? GetByUsername(string token, string username)
     {
+        var userId = JwtService.VerifyToken(token);
+        if (userId is default(int))
+            return null;
+
         var userFromRedis = _redis.Get($"user?username={username}");
         if (userFromRedis is null)
         {
@@ -168,7 +272,7 @@ public class UserService
         else
         {
             User user = JsonConvert.DeserializeObject<User>(userFromRedis, JsonSettings.DefaultSettings)!;
-            return new UserFullDto(user);
+            return new UserFullDto(user) {friendStatus = CheckFriendStatus(userId, user.Id)};
         }
     }
 
@@ -225,23 +329,26 @@ public class UserService
         }
     }
 
-    public async Task<bool> UpdateUser(int id, JObject json)
+    public async Task<bool> UpdateUser(string token, Dictionary<string, StringValues> body)
     {
-        User? user = await _userRepository.GetByIdAsync(id);
+        var userId = JwtService.VerifyToken(token);
+        if (userId is default(int))
+            return false;
+
+        User? user = await _userRepository.GetByIdAsync(userId);
         if (user is not null)
         {
             try
             {
-                foreach (var property in json.Properties())
-                {
-                    var userProperty = user.GetType().GetProperty(property.Name);
-                    if (userProperty is not null)
-                    {
-                        var convertedValue = property.Value.ToObject(userProperty.PropertyType);
-                        userProperty.SetValue(user, convertedValue);
-                    }
-                }
-                return await _userRepository.Update(user);
+                user.About = body["about"];
+                user.FirstName = body["firstName"]!;
+                user.LastName = body["lastName"]!;
+                user.Privacy = body["privacy"]!;
+                user.Country = body["country"]!;
+                user.City = body["city"]!;
+                await _userRepository.Update(user);
+                _redis.Set($"user?username={user.Username}", JsonConvert.SerializeObject(user, JsonSettings.DefaultSettings), new TimeSpan(1, 0, 0));
+                return true;
             }
             catch(Exception exp)
             {

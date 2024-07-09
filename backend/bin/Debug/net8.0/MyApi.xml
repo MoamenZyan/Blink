@@ -174,6 +174,30 @@
         <member name="M:backend.Migrations.story.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:backend.Migrations.citycountry">
+            <inheritdoc />
+        </member>
+        <member name="M:backend.Migrations.citycountry.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:backend.Migrations.citycountry.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:backend.Migrations.citycountry.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:backend.Migrations.friendsfeatures">
+            <inheritdoc />
+        </member>
+        <member name="M:backend.Migrations.friendsfeatures.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:backend.Migrations.friendsfeatures.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:backend.Migrations.friendsfeatures.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
         <member name="M:UserService.AddUserAsync(System.Collections.Generic.Dictionary{System.String,Microsoft.Extensions.Primitives.StringValues})">
             <summary>
             Do validation before adding user to database
@@ -181,14 +205,7 @@
             <param name="body">dictionary has user information</param>
             <returns>User that created and message</returns>
         </member>
-        <member name="M:UserService.GetUserByIdAsync(System.Int32)">
-            <summary>
-            Get specific user from database
-            </summary>
-            <param name="id">Id of the user</param>
-            <returns>If found returns user, null otherwise</returns>
-        </member>
-        <member name="M:UserService.GetAllAsync">
+        <member name="M:UserService.GetAllAsync(System.String)">
             <summary>
             Get all users from database
             </summary>
@@ -201,11 +218,12 @@
             <param name="func">delegate of condition</param>
             <returns>if there any metch it returns it, null otherwise</returns>
         </member>
-        <member name="M:UserService.GetByUsername(System.String)">
+        <member name="M:UserService.GetByUsername(System.String,System.String)">
             <summary>
             Filter method to filter user's by specific condition
             </summary>
             <param name="username">username of the user</param>
+            <param name="token">token of the logged in user</param>
             <returns>if there any metch it returns it, null otherwise</returns>
         </member>
         <member name="M:UserService.Delete(System.Int32,System.String)">

@@ -42,8 +42,8 @@ public class PostsRepository : IRepository<Post>
             .Include(p => p.User)
             .Include(p => p.Reactions)
                 .ThenInclude(p => p.User)
-            .Include(p => p.Comments)
-            .Include(p => p.Replies)
+            .Include(c => c.Comments.OrderByDescending(c => c.CreatedAt))
+            .Include(r => r.Replies.OrderBy(r => r.CreatedAt))
             .OrderByDescending(p => p.CreatedAt)
             .ToListAsync();
 
@@ -56,6 +56,7 @@ public class PostsRepository : IRepository<Post>
         Post? post = await _context.Posts
                     .Include(p => p.User)
                     .Include(p => p.Reactions)
+                    .Include(c => c.Comments.OrderByDescending(c => c.CreatedAt))
                     .FirstOrDefaultAsync(post => post.Id == id);
 
         return post;

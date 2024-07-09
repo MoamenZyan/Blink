@@ -23,7 +23,7 @@
 }
 
 .add_icon {
-    margin-top: 5px;
+    margin-top: 7px;
     display: flex;
     width: 50px;
     height: 70px;
@@ -101,4 +101,64 @@
     justify-content: center;
     align-items: center;
     background-color: rgba(252, 179, 65, 1);
+}
+
+.share {
+    background-color: white;
+    border-radius: 25px;
+    width: 90%;
+    box-shadow: 0px 5px 8px 1px rgb(216, 214, 214);
+    cursor: pointer;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.share_icon {
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    mask: url("./assets/share.svg") no-repeat center;
+    -webkit-mask: url("./assets/share.svg") no-repeat center;
+}
+
+.favorite {
+    background-color: white;
+    border-radius: 25px;
+    width: 90%;
+    box-shadow: 0px 5px 8px 1px rgb(216, 214, 214);
+    cursor: pointer;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.favorite_icon {
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    mask: url("./assets/favorite.svg") no-repeat center;
+    -webkit-mask: url("./assets/favorite.svg") no-repeat center;
+}
+
+.block {
+    background-color: white;
+    border-radius: 25px;
+    width: 90%;
+    box-shadow: 0px 5px 8px 1px rgb(216, 214, 214);
+    cursor: pointer;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.block_icon {
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    mask: url("./assets/block.svg") no-repeat center;
+    -webkit-mask: url("./assets/block.svg") no-repeat center;
 }

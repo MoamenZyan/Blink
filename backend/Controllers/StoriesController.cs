@@ -55,4 +55,18 @@ public class StoriesController : Controller
         else
             return StatusCode(200, new {status=true, story=story});
     }
+
+    [HttpGet("/api/v1/story/{id}")]
+    public async Task<IActionResult> GetStoryById(int id)
+    {
+        var token = JwtService.VerifyToken(Request.Cookies["jwt"]!);
+        if (token is default(int))
+            return StatusCode(409, "unauthorized token");
+
+        var story = await _storyService.GetStoryById(id);
+        if (story is null)
+            return StatusCode(404, new {status=false, message=$"there is no story with this id {id}"});
+        else
+            return StatusCode(200, new {status=true, story=story});
+    }
 }

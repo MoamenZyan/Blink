@@ -81,7 +81,7 @@ export default function UserCard({user}) {
                     </div>
                 </div>
                 <div className={`${styles.list} ${list ? styles.open : ''}`}>
-                    <div className={styles.account}>
+                    <div onClick={() => {router.push("/profile/settings")}} className={styles.account}>
                         <div className={styles.account_icon}></div>
                         <p>Account Management</p>
                     </div>

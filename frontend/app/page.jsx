@@ -10,28 +10,29 @@ import GetAllPosts from "@/ApiHelper/posts/getAllPosts";
 import { useEffect, useState } from "react";
 import GetUserByUsername from "@/ApiHelper/users/getUserByUsername";
 import CreatePostPopup from "@/components/createPost/createPost.module";
+import Image from "next/image";
+import GetAllFriendsUsers from "@/ApiHelper/users/getAllFriends";
 
 export default function HomePage() {
     const [createPost, setCreatePost] = useState(false);
     const [posts, setPosts] = useState([]);
     const [trigger, setTrigger] = useState(false);
     const [user, setUser] = useState(null);
+    const [fullLoaded, setFullLoaded] = useState(false);
 
     useEffect(() => {
         const getInfo = async () => {
             const result = await GetAllPosts();
             const User = await GetUserByUsername(localStorage.getItem('userName'));
-            if (result.status && User.status) {
+            if (result.status || User.status) {
                 setUser(User.user);
                 setPosts(result.posts.$values);
+                setFullLoaded(true);
             }
         };
         getInfo();
     }, [trigger]);
-
-    if (user == null) {
-        return (<></>)
-    } else {
+    if (fullLoaded) {
         return (
             <>
                 <div className={styles.parent}>
@@ -42,8 +43,13 @@ export default function HomePage() {
                                 <UserCard user={user && user} />
                             </div>
                             <div className={styles.center_div}>
-                                <StoriesWrapper user={user && user} />
-                                <PostsWrapper posts={posts} />
+                                {user && <StoriesWrapper user={user} />}
+                                <PostsWrapper setTrigger={setTrigger} trigger={trigger} posts={posts} />
+                                <div className={styles.no_posts}>
+                                    <p>There is no more posts</p>
+                                    <p>Make some friends to see more posts !</p>
+                                </div>
+                                <Image className={styles.end_of_posts} src={"/assets/photo1.svg"} width={100} height={100} alt=""/>
                             </div>
                             <div className={styles.right_div}>
                                 <StorySettingsList />

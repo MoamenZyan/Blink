@@ -6,10 +6,12 @@ import styles from "./userInfoSection.module.css";
 import UploadUserPhoto from "@/ApiHelper/users/uploadUserPhoto";
 import EmojiPicker from "emoji-picker-react";
 import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import UpdateUserAbout from "@/ApiHelper/users/updateUserAbout";
 
 
 export default function UserInfoSection({user, isLogged, setTrigger, trigger}) {
+    const router = useRouter();
     const list = useRef(null);
     const [photoList, setPhotoList] = useState(false);
     const [uploading, setUploading] = useState(false);
@@ -87,13 +89,17 @@ export default function UserInfoSection({user, isLogged, setTrigger, trigger}) {
                                     <div className={styles.camera}></div>
                                 </div>
                             </>}
-                            {photoList && <div ref={list}><ProfilePhotoList stories={user.stories.$values.length > 0} isMine={isMine} handleUpload={handleUpload} /></div>}
+                            {photoList && <div ref={list}><ProfilePhotoList id={user.id} stories={user.stories.$values.length > 0} isMine={isMine} handleUpload={handleUpload} /></div>}
                         </div>
                         <div className={styles.user_info_details}>
                             <h1>{user.firstName} {user.lastName}</h1>
-                            <div style={{display: "flex", alignItems: "center"}}>
+                            {(user.country != "null" || user.city != "null") && <div style={{display: "flex", alignItems: "center"}}>
                                 <div className={styles.location}></div>
-                                <p>Cairo, Egypt</p>
+                                <p>{user.city}, {user.country}</p>
+                            </div>}
+                            <div className={styles.at} style={{display: "flex", alignItems: "center", marginTop: "5px"}}>
+                                <Image src={"/assets/at.svg"} width={20} height={20} alt=""/>
+                                <p>{user.username}</p>
                             </div>
                             <div className={styles.friends}>
                                 <p>300 friends</p>
@@ -109,7 +115,7 @@ export default function UserInfoSection({user, isLogged, setTrigger, trigger}) {
                     </div>
                     {isLogged && <div className={styles.user_settings}>
                         <button>Add Friend</button>
-                        {isMine && <button>Edit Profile Info</button>}
+                        {isMine && <button onClick={() => {router.push("/profile/settings")}}>Edit Profile Info</button>}
                     </div>}
                 </div>
                 <div className={styles.line}></div>

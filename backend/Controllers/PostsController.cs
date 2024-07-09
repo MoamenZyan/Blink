@@ -19,9 +19,13 @@ public class PostsController : Controller
     [HttpGet("/api/v1/posts")]
     public async Task<ActionResult> GetAllPosts()
     {
+        var token = Request.Cookies["jwt"];
+        if (token is null)
+            return Unauthorized();
+
         try
         {
-            var posts = await _postService.GetAllPosts();
+            var posts = await _postService.GetAllPosts(token);
             return Ok(new {status=true, posts=posts});
         }
         catch(Exception exp)

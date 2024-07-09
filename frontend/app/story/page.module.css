@@ -1,6 +1,10 @@
 .parent {
     background-color: rgb(249, 249, 249);
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 .container {
     width: 90%;
@@ -206,4 +210,20 @@
     left: 0;
     background-color: rgba(0, 0, 0, 0.396);
     z-index: 5;
+}
+
+/* To Do */
+@media (max-width: 600px) {
+    .right {
+        position: relative;
+        left: -110px;
+        width: 50px;
+    }
+    .normal {
+        z-index: 100;
+    }
+    .normal p {
+        visibility: hidden;
+        display: none;
+    }
 }

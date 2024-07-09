@@ -52,4 +52,16 @@ public class RedisCache : IRedisCache
         IDatabase db = _redis.GetDatabase();
         return db.SetContains($"post:{postId}:likes", userId);
     }
+
+    public bool Exists(string key)
+    {
+        IDatabase db = _redis.GetDatabase();
+        return db.KeyExists(key);
+    }
+
+    public void CreateLikesSet(int postId)
+    {
+        IDatabase db = _redis.GetDatabase();
+        db.SetAdd($"post:{postId}:likes", "");
+    }
 }

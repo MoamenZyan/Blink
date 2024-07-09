@@ -29,7 +29,6 @@ export default function ProfilePage(props) {
             if (result.status) {
                 setUser(result.user);
                 setPosts(result.user.posts.$values);
-                console.log(result.user.posts.$values);
                 setLoaded(true);
             } else {
                 router.push("/");
@@ -45,11 +44,11 @@ export default function ProfilePage(props) {
                     <Header />
                     <div className={styles.container}>
                         <div className={styles.left}>
-                            <SettingsList />
+                            <SettingsList user={user} />
                         </div>
                         <div className={styles.center}>
                             <UserInfoSection setTrigger={setTrigger} trigger={trigger} user={user} isLogged={isLogged} />
-                            <PostsWrapper posts={posts} />
+                            <PostsWrapper setTrigger={setTrigger} trigger={trigger} posts={posts} />
                         </div>
                         <div className={styles.right}></div>
                     </div>

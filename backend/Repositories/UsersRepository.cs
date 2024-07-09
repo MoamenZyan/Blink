@@ -48,6 +48,12 @@ public class UsersRepository : IRepository<User>
                                             .ThenInclude(p => p.Reactions)
                                         .Include(u => u.Posts)
                                             .ThenInclude(p => p.Comments)
+                                        .Include(u => u.Posts)
+                                            .ThenInclude(u => u.Replies)
+                                        .Include(u => u.Friends)
+                                            .ThenInclude(u => u.User2)
+                                        .Include(u => u.FriendOf)
+                                            .ThenInclude(u => u.User1)
                                         .Include(u => u.Stories).ToListAsync();
         return users;
     }
@@ -60,6 +66,8 @@ public class UsersRepository : IRepository<User>
                                 .ThenInclude(p => p.Reactions)
                             .Include(u => u.Posts)
                                 .ThenInclude(p => p.Comments)
+                            .Include(u => u.Posts)
+                                .ThenInclude(p => p.Replies)
                             .Include(u => u.Stories)
                             .Where(func)
                             .ToList();

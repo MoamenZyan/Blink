@@ -35,7 +35,8 @@ public class ReplyConfiguration : IEntityTypeConfiguration<Reply>
         // Relation With Comment
         builder.HasOne(r => r.Comment)
                 .WithMany(c => c.Replies)
-                .HasForeignKey(r => r.CommentId);
+                .HasForeignKey(r => r.CommentId)
+                .OnDelete(DeleteBehavior.Cascade);
 
         // Relation With Post
         builder.HasOne(r => r.Post)

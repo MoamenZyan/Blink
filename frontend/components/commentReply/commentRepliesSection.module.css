@@ -1,0 +1,22 @@
+.parent {
+    margin-left: auto;
+    width: 85%;
+    margin-bottom: 10px;
+}
+
+@media (max-width: 600px) {
+    .parent {
+        width: 90%;
+    }
+}
+
+.hide {
+    margin-left: 10px;
+    color: gray;
+    cursor: pointer;
+    width: max-content;
+}
+
+.hide:hover {
+    text-decoration: underline;
+}

@@ -45,6 +45,25 @@
     width: max-content;
 }
 
+.no_notifications_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.no_notifications_div .photo {
+    width: 70%;
+    height: 70%;
+}
+
+.no_notifications_div p {
+    margin-top: 30px;
+    font-size: 15pt;
+    font-weight: 700;
+    color: rgb(178, 178, 178);
+}
+
 
 .clear:hover {
     text-decoration: underline;

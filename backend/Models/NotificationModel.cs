@@ -32,6 +32,7 @@ public class PostNotificationDto
     public int OwnerId {get; set;}
     public string? Username {get; set;}
     public string? UserPhoto {get; set;}
+    public string Message {get; set;}
     public DateTime CreatedAt {get; set;}
     public int Reactions {get; set;}
     public int PostId {get; set;}
@@ -43,6 +44,7 @@ public class PostNotificationDto
         OwnerId = notification.OwnerId;
         Username = notification.User.Username;
         UserPhoto = notification.User.Photo;
+        Message = notification.Message;
         CreatedAt = notification.CreatedAt;
         PostId = notification.Post.Id;
         Reactions = notification.Post.Reactions.Count;
@@ -54,11 +56,11 @@ public class FriendRequestNotificationDto
     public int Id {get; set;}
     public int UserId {get; set;}
     public int OwnerId {get; set;}
-    public required string Message {get; set;}
     public DateTime CreatedAt {get; set;}
     public string Username {get; set;}
     public string? UserPhoto {get; set;}
-    public string? Headline {get; set;}
+    public string? City {get; set;}
+    public string? Country {get; set;}
     public string Email {get; set;}
 
     public FriendRequestNotificationDto(FriendRequestNotification notification)
@@ -69,7 +71,8 @@ public class FriendRequestNotificationDto
         CreatedAt = notification.CreatedAt;
         Username = notification.User.Username;
         UserPhoto = notification.User.Photo;
-        Headline = notification.User.Headline;
+        City = notification.User.City;
+        Country = notification.User.Country;
         Email = notification.User.Email;
     }
 }

@@ -38,6 +38,10 @@ export default function SignupPage() {
                                     <Input type="text" placeholder={"Last Name"} password={false} name={"LastName"} />
                                 </div>
                                 <Input type="text" placeholder={"Email"} password={false} name={"Email"} />
+                                <div className={styles.names}>
+                                    <Input type="text" placeholder={"City"} password={false} name={"City"} />
+                                    <Input type="text" placeholder={"Country"} password={false} name={"Country"} />
+                                </div>
                                 <Input type="password" placeholder={"Password"} password={true} name={"Password"} />
                                 <Input type="password" placeholder={"Confirm Your Password"} password={true} />
                                 <div className={styles.button}>

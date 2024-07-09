@@ -65,7 +65,7 @@ export default function CreatePostPopup({setPopup, trigger, setTrigger}) {
                             style={{position: "absolute", right: "10px", bottom: "10px", cursor: "pointer"}} 
                             />
                         </div>
-                        {picker && <EmojiPicker height={400} onEmojiClick={handleEmojiClick} style={{position: "absolute"}}/>}
+                        {picker && <EmojiPicker height={400} onEmojiClick={handleEmojiClick} style={{position: "absolute", zIndex: "1000"}}/>}
                         <div className={styles.left_div_flex}>
                             <div className={styles.check_boxes}>
                                 <div>
@@ -95,7 +95,7 @@ export default function CreatePostPopup({setPopup, trigger, setTrigger}) {
                     <div className={styles.right}>
                         <div className={styles.photo}>
                             <div style={{position: "relative"}}>
-                                <Image priority alt="" onClick={handleInputClick} src={photoURL == null ? "/assets/default.svg" : photoURL} width={180} height={180}
+                                <Image className={styles.default_image} priority alt="" onClick={handleInputClick} src={photoURL == null ? "/assets/default.svg" : photoURL} width={180} height={180}
                                 style={{cursor: "pointer", objectFit: "cover", borderRadius: "20px"}}/>
                                 {photo != null && <Image src={"/assets/exit.svg"} width={30} height={30} alt=""
                                 style={{position: "absolute", right: "5px", top: "5px",

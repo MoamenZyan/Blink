@@ -47,6 +47,7 @@
     transition: 0.2s;
     border-radius: 50px;
     padding: 5px;
+    cursor: pointer;
 }
 
 .settings_wrapper:hover {
@@ -54,31 +55,31 @@
     background-color: rgb(242, 240, 240);
 }
 
-.settings {
-    padding: 0 30px;
-    cursor: pointer;
-    background: url("./assets/3-dots.svg") no-repeat center;
-    width: 35px;
-    height: 35px;
-}
-
 .body {
     display: flex;
     justify-content: center;
     flex-direction: column;
-    min-height: 100px;
     max-height: 500px;
     background-color: white;
 }
 
 .caption {
+    padding: 10px;
     font-weight: 500;
     min-height: 50px;
-    margin-bottom: 10px;
-    margin-left: 10px;
     display: flex;
     align-items: center;
 }
+
+.caption p {
+    font-weight: 700;
+}
+
+.caption p span {
+    color: rgb(43, 43, 43);
+    font-weight: 600;
+}
+
 
 .body_photo {
     max-height: 450px;
@@ -91,14 +92,12 @@
 
 .reactions {
     background-color: white;
-    padding: 20px;
+    padding: 0px 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     height: 100px;
     width: 100%;
-    border-bottom-left-radius: 25px;
-    border-bottom-right-radius: 25px;
 }
 
 .reactions .left {
@@ -112,6 +111,7 @@
 }
 
 .like {
+    position: relative;
     cursor: pointer;
     display: flex;
     justify-content: center;
@@ -120,11 +120,60 @@
 }
 
 .like_icon {
+    transition: 0.5s;
     width: 38px;
-    height: 60px;
+    height: 30px;
     background-color: #333333;
-    mask: url("./assets/like.svg") no-repeat center;
-    -webkit-mask: url("./assets/like.svg") no-repeat center;
+    mask: url("./assets/Main\ star.svg") no-repeat center;
+    -webkit-mask: url("./assets/Main\ star.svg") no-repeat center;
+}
+
+.glints {
+    z-index: 10;
+    top: 0;
+    position: absolute;
+}
+
+.glint1 {
+    width: 1px;
+    height: 1px;
+    position: absolute;
+    top: 40px;
+    left: 10px;
+}
+
+.glint2 {
+    width: 1px;
+    height: 1px;
+    position: absolute;
+    bottom: -30px;
+    right: 10px;
+}
+
+.glint3 {
+    width: 1px;
+    height: 1px;
+    position: absolute;
+    top: 10px;
+    bottom: -40px;
+}
+
+.glint {
+    width: 1px;
+    height: 1px;
+    transition: width 0.2s ease-out, height 0.2s ease-out;
+    animation: like_animation 1.5s ease-out forwards;
+}
+
+@keyframes like_animation {
+    0%, 100% {
+        opacity: 0;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(25);
+    }
 }
 
 .comment {
@@ -166,6 +215,7 @@
 }
 
 .icon_wrapper {
+    position: relative;
     padding: 5px;
     display: flex;
     justify-content: center;
@@ -193,3 +243,25 @@
     margin: 0 7px;
 }
 
+
+@media (max-width: 600px) {
+    .user_info h2 {
+        font-size: 15pt;
+    }
+    .user_info p{
+        font-size: 10pt;
+    }
+    .like_count {
+        font-size: 8pt;
+    }
+    .comment_count {
+        font-size: 8pt;
+    }
+    .share_count {
+        font-size: 8pt;
+    }
+
+    .caption p {
+        font-size: 11pt;
+    }
+}

@@ -188,7 +188,7 @@
 }
 
 .user_settings button {
-    margin-left: 30px;
+    margin-left: 10px;
     font-weight: 700;
     cursor: pointer;
     background-color: var(--light-yellow);
@@ -264,4 +264,33 @@
     border: none;
     outline: none;
     resize: none;
+}
+
+
+.at p{
+    margin-left: 10px;
+}
+
+@media (max-width: 600px) {
+    
+    .profile_photo {
+        width: 150px;
+        height: 150px;
+    }
+
+    .user_photo_wrapper {
+        margin-left: 20px;
+    }
+
+    .banner_photo_div {
+        width: 100%;
+    }
+
+    .user_info_details {
+        margin-top: 10px;
+    }
+
+    .user_info_details h1{
+        font-size: 15pt;
+    }
 }

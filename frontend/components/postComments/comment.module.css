@@ -1,0 +1,131 @@
+.parent {
+    /* overflow: hidden; */
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    background-color: white;
+    border-radius: 25px;
+    box-shadow: 0px 5px 15px 0px rgb(198, 196, 196);
+    margin-bottom: 15px;
+}
+
+.core {
+    width: 85%;
+    display: flex;
+}
+
+.user_profile_photo {
+    margin-right: 10px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    object-fit: cover;
+}
+
+
+.content {
+    width: 100%;
+}
+
+.content h3 {
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.content p {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    font-size: 13pt;
+    white-space: wrap;
+}
+
+.time {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 11pt;
+}
+
+.line {
+    margin: 20px auto;
+    width: 90%;
+    height: 1px;
+    border-radius: 25px;
+    background-color: rgb(167, 163, 163);
+}
+
+.comment_reactions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.comment_reactions button {
+    margin: 0 20px;
+    border: none;
+    font-weight: 900;
+    color: rgb(100, 99, 99);
+    outline: none;
+    background-color: white;
+    cursor: pointer;
+}
+
+.comment_reactions button:hover {
+    text-decoration: underline;
+}
+
+.continue {
+    height: 20px;
+    width: 75%;
+    margin: 0 auto;
+    background-color: transparent;
+    margin-bottom: 8px;
+    border: 2px solid rgb(184, 183, 183);
+    border-bottom-left-radius: 40px;
+    border-top: none;
+    border-right: none;
+    transition: 0.1s;
+}
+
+.replies_continue {
+    cursor: pointer;
+    color: rgb(115, 114, 114);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.replies_continue p {
+    font-size:  10pt;
+    margin-left: 10px;
+}
+
+.replies_continue:hover > .continue {
+    transition: 0.1s;
+    border-color: rgb(128, 126, 126);
+}
+
+.replies_continue:hover > p {
+    text-decoration: underline;
+    color: black
+}
+
+@media (max-width: 600px) {
+    .content h3 {
+        font-size: 12pt;
+    }
+
+    .content p {
+        font-size: 10pt;
+    }
+
+    .time {
+        font-size: 8pt;
+    }
+
+
+}

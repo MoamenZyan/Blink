@@ -65,3 +65,18 @@
     width: 30px;
     height: 30px;
 }
+
+@media (max-width: 600px) {
+
+    .list {
+        top: 110px;
+        left: -10px
+    }
+
+    .list::after {
+        left: 25%;
+        transform: translateX(-25%);
+    }
+
+}
+

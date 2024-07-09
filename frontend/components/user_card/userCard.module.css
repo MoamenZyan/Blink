@@ -242,11 +242,18 @@
 }
 
 
-@media (max-width: 1550px) {
+@media (max-width: 1550px) and (min-width: 1300px) {
     .card {
         width: 20%;
     }
     .user_info_details {
         font-size: 9pt;
+    }
+}
+
+@media (max-width: 1300px) {
+    .card {
+        display: none;
+        visibility: hidden;
     }
 }

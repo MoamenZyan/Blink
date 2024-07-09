@@ -7,8 +7,9 @@ import EmojiPicker from "emoji-picker-react";
 import CreateStory from "@/ApiHelper/stories/createStory";
 import StoryUpload from "@/components/story/storyUpload.module";
 import { useRouter } from "next/navigation";
+import StoryPrivacy from "@/components/storyPrivacy/storyPrivacy.module";
 
-export default function StoryPage() {
+export default function StoryCreationPage() {
     const router = useRouter();
     const textColorInput = useRef(null);
     const backgroundColorInput = useRef(null);
@@ -21,6 +22,10 @@ export default function StoryPage() {
     const [backgroundColor, setBackgroundColor] = useState("white");
     const [textColor, setTextColor] = useState("black");
     const [uploading, setUploading] = useState(false);
+    const [privacyPopup, setPrivacyPopup] = useState(false);
+    const [privacy, setPrivacy] = useState("public");
+    const [privacyIcon, setPrivacyIcon] = useState("/assets/public_white.svg");
+    const [isHovered, setIsHovered] = useState(false);
 
     const photoSelection = () => {
         const Photo = photoInput.current.files[0];
@@ -38,7 +43,7 @@ export default function StoryPage() {
         } else {
             form.append("Content", null);
         }
-        form.append("Privacy", "public");
+        form.append("Privacy", privacy);
         form.append("backgroundColor", backgroundColor);
         form.append("textColor", textColor);
         setUploading(true);
@@ -47,10 +52,25 @@ export default function StoryPage() {
         router.push("/");
     }
 
+    const handleIcon = (value) => {
+        switch (value) {
+            case "public":
+                setPrivacyIcon("/assets/public_white.svg");
+                break;
+            case "friends":
+                setPrivacyIcon("/assets/friends_white.svg");
+                break;
+            case "private":
+                setPrivacyIcon("/assets/private_white.svg");
+                break;
+        }
+    }
+
+
     return (
         <>
             <div className={styles.parent}>
-                <Header overlay={uploading}/>
+                <Header overlay={uploading || privacyPopup}/>
                 <div className={styles.container}>
                     <h2>Create Your Story</h2>
                     <div className={styles.content}>
@@ -61,10 +81,12 @@ export default function StoryPage() {
                                     <p>Upload Story</p>
                                 </div>
                             </div>
-                            <div className={styles.wrapper}>
+                            <div onMouseEnter={() => {setIsHovered(true)}}
+                                onMouseLeave={() => {setIsHovered(false)}}
+                             onClick={() => {setPrivacyPopup(true)}} className={styles.wrapper}>
                                 <div className={`${styles.upload} ${styles.button}`}>
-                                    <Image className={styles.icon} src={"/assets/public_white.svg"} width={40} height={40} alt=""/>
-                                    <p>Public</p>
+                                    <Image className={styles.icon} src={privacyIcon} width={40} height={40} alt=""/>
+                                    <p>{isHovered == true ? "Share options" : privacy[0].toUpperCase() + privacy.slice(1, )}</p>
                                 </div>
                             </div>
                         </div>
@@ -122,10 +144,9 @@ export default function StoryPage() {
                 {emojiPicker && text && <div className={styles.emoji_div}>
                     <EmojiPicker onEmojiClick={(emoji) => {setStoryText(text => text + emoji.emoji)}} />
                 </div>}
-                {uploading && <>
-                    <div className={styles.overlay}></div>
-                    <StoryUpload backgroundColor={backgroundColor} text={storyText} imageURL={photoURL} textColor={textColor} />
-                </>}
+                {uploading && <StoryUpload backgroundColor={backgroundColor} text={storyText} imageURL={photoURL} textColor={textColor} />}
+                {uploading || privacyPopup && <div className={styles.overlay}></div>}
+                {privacyPopup && <StoryPrivacy text={"story"} setPrivacy={setPrivacy} handleIcon={handleIcon} setPrivacyPopup={setPrivacyPopup} />}
             </div>
         </>
     )

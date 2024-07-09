@@ -1,20 +1,37 @@
 "use client";
 import styles from "./post.module.css";
 import { formatDistanceToNow } from 'date-fns';
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import AddReactionOnAPost from "@/ApiHelper/reactions/addReactionOnAPost";
 import DeleteReactionFromAPost from "@/ApiHelper/reactions/deleteReactionFromAPost";
 import HasReactionOnAPost from "@/ApiHelper/reactions/checkReactionOnAPost";
 import PostOptions from "../postOptions/postOptions.module";
 import Image from "next/image";
+import PostCommentsSection from "../postComments/postComments.module";
 
-export default function Post({post}) {
+export default function Post({post, setTrigger, trigger}) {
+    const glint1 = useRef(null);
+    const glint2 = useRef(null);
+    const glint3 = useRef(null);
     const router = useRouter();
     const [liked, setLiked] = useState(false);
     const [likeCount, setLikeCount] = useState(post.reactions.$values.length);
     const [commentsCount, setCommentsCount] = useState(post.comments.$values.length)
     const [optionsList, setOptionsList] = useState(false);
+    const [comments, setComments] = useState(false);
+
+
+    const startLikeAnimation = () => {
+        glint1.current.classList.add(styles.glint);
+        glint2.current.classList.add(styles.glint);
+        glint3.current.classList.add(styles.glint);
+        setTimeout(() => {
+            glint1.current.classList.remove(styles.glint);
+            glint2.current.classList.remove(styles.glint);
+            glint3.current.classList.remove(styles.glint);
+        }, 2000);
+    }
 
     const handleLike = async () => {
         if (liked) {
@@ -23,6 +40,7 @@ export default function Post({post}) {
                 setLikeCount(count => count - 1);
             await DeleteReactionFromAPost(post.id);
         } else {
+            startLikeAnimation();
             setLiked(true);
             setLikeCount(count => count + 1);
             await AddReactionOnAPost(post.id);
@@ -83,29 +101,34 @@ export default function Post({post}) {
                             </div>
                         </div>
                     </div>
-                    <div className={styles.settings_wrapper}>
-                        <div onClick={() => {setOptionsList(!optionsList)}} className={styles.settings}></div>
+                    <div onClick={() => {setOptionsList(!optionsList)}} className={styles.settings_wrapper}>
+                        <Image width={30} height={30} src={"/assets/3-dots.svg"} alt=""/>
                     </div>
                 </div>
                 <div className={styles.body}>
-                    <div className={styles.caption}>
-                        {post.caption}
-                    </div>
                     {post.photo != "null" && <img className={styles.body_photo} src={post.photo} />}
+                    <div className={styles.caption}>
+                        <p>{post.photo != "null" && <>{post.username}</>}<span style={{marginLeft: post.photo != "null" && "20px"}}>{post.caption}</span></p>
+                    </div>
                 </div>
                 <div className={styles.reactions}>
                     <div className={styles.left}>
                         <div onClick={handleLike} className={styles.like}>
+                            <div className={styles.glints}>
+                                <Image ref={glint1} className={`${styles.glint1}`} src={"/assets/glint1.svg"} width={50} height={50}/>
+                                <Image ref={glint2} className={`${styles.glint2}`} src={"/assets/glint2.svg"} width={50} height={50}/>
+                                <Image ref={glint3} className={`${styles.glint3}`} src={"/assets/glint3.svg"} width={50} height={50}/>
+                            </div>
                             <div className={styles.icon_wrapper}>
                                 <div className={styles.like_icon} style={{backgroundColor: liked && "#FCB341"}}></div>
                             </div>
                             <div className={styles.like_count}>{likeCount} Blinks</div>
                         </div>
-                        <div className={styles.comment}>
+                        <div onClick={() => {setComments(!comments)}} className={styles.comment}>
                             <div className={styles.icon_wrapper}>
                                 <div className={styles.comment_icon}></div>
                             </div>
-                            <div className={styles.comment_count}>{commentsCount} Comments</div>
+                            <div className={styles.comment_count}>{commentsCount + post.replies.$values.length} Comments</div>
                         </div>
                         <div className={styles.share}>
                             <div className={styles.icon_wrapper}>
@@ -121,6 +144,7 @@ export default function Post({post}) {
                     </div>
                 </div>
                 {optionsList && <PostOptions post={post} setOptions={setOptionsList} />}
+                <PostCommentsSection isComments={comments} setCommentCount={setCommentsCount} setTrigger={setTrigger} trigger={trigger} postId={post.id} comments={post.comments.$values} />
             </div>
         </>
     );

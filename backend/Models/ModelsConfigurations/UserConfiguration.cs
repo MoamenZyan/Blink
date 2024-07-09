@@ -57,6 +57,16 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
                 .HasColumnType("VARCHAR")
                 .HasMaxLength(1024)
                 .IsRequired(false);
+        
+        builder.Property(u => u.Country)
+                .HasColumnType("VARCHAR")
+                .HasMaxLength(255)
+                .IsRequired(false);
+
+        builder.Property(u => u.City)
+                .HasColumnType("VARCHAR")
+                .HasMaxLength(255)
+                .IsRequired(false);
 
         builder.HasIndex(u => u.Username).IsUnique();
     }

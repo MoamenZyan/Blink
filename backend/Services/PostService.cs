@@ -7,6 +7,7 @@ public class PostService
 {
     private readonly IRepository<Post> _postRepository;
     private readonly IRepository<User> _userRepository;
+    private readonly UserService _userService;
     private readonly UploadPhotoService _uploadPhotoService;
     private readonly IRedisCache _redis;
     private Guid uuid = Guid.NewGuid();
@@ -15,12 +16,15 @@ public class PostService
     public PostService(IRepository<Post> postsRepository,
                         IRepository<User> userRepository,
                         IRedisCache redis,
-                        UploadPhotoService uploadPhotoService)
+                        UploadPhotoService uploadPhotoService,
+                        UserService userService
+                        )
     {
         _postRepository = postsRepository;
         _userRepository = userRepository;
         _redis = redis;
         _uploadPhotoService = uploadPhotoService;
+        _userService = userService;
     }
 
     // Add post to database
@@ -62,22 +66,27 @@ public class PostService
         return posts;
     }
 
-    public async Task<List<PostDto>?> GetAllPosts()
+    public async Task<List<PostDto>?> GetAllPosts(string token)
     {
         // Getting posts from redis
-        string? json = _redis.Get("posts");
+        var userId = JwtService.VerifyToken(token);
+        if (userId is default(int))
+            return new List<PostDto>();
+
+        string? json = _redis.Get($"{userId}:posts");
         if (json is null)
         {
-            List<Post>? posts = await _postRepository.GetAllAsync();
+            List<User>? users = await _userService.GetAllFriendsUsersForPosts(userId);
+            List<Post>? posts = users?.SelectMany(u => u.Posts).OrderByDescending(p => p.CreatedAt).ToList();
             if (posts is null)
                 return null;
             // If not in redis then set it
-            _redis.Set("posts", JsonConvert.SerializeObject(posts, JsonSettings.DefaultSettings), new TimeSpan(1, 0, 0));
+            _redis.Set($"{userId}:posts", JsonConvert.SerializeObject(posts, JsonSettings.DefaultSettings), new TimeSpan(1, 0, 0));
             return posts.Select(p => new PostDto(p)).ToList();
         }
         else
         {
-            var postsFromRedis = JsonConvert.DeserializeObject<List<Post>>(json)!;
+            var postsFromRedis = JsonConvert.DeserializeObject<List<Post>?>(json)!;
             return postsFromRedis.Select(p => new PostDto(p)).ToList();
         }
     }

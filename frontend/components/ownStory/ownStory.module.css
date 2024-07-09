@@ -79,7 +79,6 @@
     width: 40px;
     height: 40px;
     position: absolute;
-    left: 0;
     z-index: 2;
     top: 48%;
     left: 50%;
@@ -118,4 +117,37 @@
     height: 300px;
     object-fit: cover;
     filter: blur(10px);
+}
+
+
+@media (max-width: 600px) {
+    .story_div {
+        overflow: visible;
+        width: 70px;
+        height: 70px;
+        min-width: 70px;
+        min-height: 70px;
+        box-shadow: none;
+        border-radius: 50%;
+    }
+
+    .story_photo {
+        visibility: hidden;
+        display: none;
+    }
+
+    .blured_photo {
+        visibility: hidden;
+        display: none;
+        height: 0px;
+    }
+    .user_photo {
+        border: 5px solid var(--dark-yellow);
+    }
+
+    .add_story {
+        width: 35px;
+        height: 35px;
+    }
+
 }

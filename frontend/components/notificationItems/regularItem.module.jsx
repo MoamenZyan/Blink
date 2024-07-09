@@ -1,6 +1,6 @@
 import styles from "./regularItem.module.css";
 
-export default function RegularItem() {
+export default function PostNotification() {
     return (
         <>
             <div className={styles.item}>

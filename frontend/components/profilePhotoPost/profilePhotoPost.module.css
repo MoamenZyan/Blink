@@ -74,7 +74,7 @@
 .body img {
     border: 10px solid white;
     position: absolute;
-    bottom: 20%;
+    top: 160px;
     border-radius: 50%;
     width: 300px;
     height: 300px;
@@ -101,7 +101,7 @@
 
 .reactions {
     background-color: white;
-    padding: 20px;
+    padding: 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -122,6 +122,7 @@
 }
 
 .like {
+    position: relative;
     cursor: pointer;
     display: flex;
     justify-content: center;
@@ -130,11 +131,60 @@
 }
 
 .like_icon {
+    transition: 0.5s;
     width: 38px;
-    height: 60px;
+    height: 30px;
     background-color: #333333;
-    mask: url("./assets/like.svg") no-repeat center;
-    -webkit-mask: url("./assets/like.svg") no-repeat center;
+    mask: url("./assets/Main\ star.svg") no-repeat center;
+    -webkit-mask: url("./assets/Main\ star.svg") no-repeat center;
+}
+
+.glints {
+    z-index: 10;
+    top: 0;
+    position: absolute;
+}
+
+.glint1 {
+    width: 1px;
+    height: 1px;
+    position: absolute;
+    top: 40px;
+    left: 10px;
+}
+
+.glint2 {
+    width: 1px;
+    height: 1px;
+    position: absolute;
+    bottom: -30px;
+    right: 10px;
+}
+
+.glint3 {
+    width: 1px;
+    height: 1px;
+    position: absolute;
+    top: 10px;
+    bottom: -40px;
+}
+
+.glint {
+    width: 1px;
+    height: 1px;
+    transition: width 0.2s ease-out, height 0.2s ease-out;
+    animation: like_animation 1.5s ease-out forwards;
+}
+
+@keyframes like_animation {
+    0%, 100% {
+        opacity: 0;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(25);
+    }
 }
 
 .comment {
@@ -176,6 +226,7 @@
 }
 
 .icon_wrapper {
+    position: relative;
     padding: 5px;
     display: flex;
     justify-content: center;
@@ -201,4 +252,23 @@
 .dot {
     font-weight: 900;
     margin: 0 7px;
+}
+
+
+@media (max-width: 600px) {
+    .user_info h2 {
+        font-size: 12pt;
+    }
+    .user_info p{
+        font-size: 10pt;
+    }
+    .like_count {
+        font-size: 8pt;
+    }
+    .comment_count {
+        font-size: 8pt;
+    }
+    .share_count {
+        font-size: 8pt;
+    }
 }

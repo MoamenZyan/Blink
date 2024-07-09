@@ -11,6 +11,11 @@ public class FriendConfiguration : IEntityTypeConfiguration<Friends>
 
         // Configure Primary Key
         builder.HasKey(f => new {f.UserId1, f.UserId2});
+
+        builder.Property(f => f.Type)
+            .HasColumnType("VARCHAR")
+            .HasMaxLength(30)
+            .IsRequired();
         
         // Configuration With User
         builder.HasOne(f => f.User1)

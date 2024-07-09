@@ -32,6 +32,7 @@ builder.Services.AddCors(options =>
     });
 });
 
+
 // Dependancy Injection
 builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("localhost"));
 builder.Services.AddScoped<IRedisCache, RedisCache>();
@@ -40,12 +41,22 @@ builder.Services.AddScoped<IRepository<User>, UsersRepository>();
 builder.Services.AddScoped<IRepository<ReactionPost>, ReactionsPostRepository>();
 builder.Services.AddScoped<IRepository<ReactionComment>, ReactionsCommentRepository>();
 builder.Services.AddScoped<IRepository<ReactionReply>, ReactionsReplyRepository>();
+builder.Services.AddScoped<IRepository<Comment>, CommentsRepository>();
+builder.Services.AddScoped<IRepository<Reply>, RepliesRepository>();
+builder.Services.AddScoped<IRepository<Friends>, FriendsRepository>();
 builder.Services.AddScoped<IRepository<Story>, StoriesRepository>();
+builder.Services.AddScoped<NotificationsRepository>();
+builder.Services.AddScoped<NotificationService>();
+builder.Services.AddScoped<CommentService>();
+builder.Services.AddScoped<ReplyService>();
+builder.Services.AddScoped<FriendService>();
 builder.Services.AddScoped<StoryService>();
 builder.Services.AddScoped<ReactionService>();
 builder.Services.AddScoped<PostService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<UploadPhotoService>();
+
+
 
 // To prevent reference cycle
 builder.Services.AddControllers()

@@ -90,6 +90,11 @@ namespace backend.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime");
 
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("VARCHAR");
+
                     b.HasKey("UserId1", "UserId2");
 
                     b.HasIndex("UserId2");
@@ -373,6 +378,14 @@ namespace backend.Migrations
 
                     b.Property<string>("About")
                         .HasMaxLength(1024)
+                        .HasColumnType("VARCHAR");
+
+                    b.Property<string>("City")
+                        .HasMaxLength(255)
+                        .HasColumnType("VARCHAR");
+
+                    b.Property<string>("Country")
+                        .HasMaxLength(255)
                         .HasColumnType("VARCHAR");
 
                     b.Property<DateTime>("CreatedAt")

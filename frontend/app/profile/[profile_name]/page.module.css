@@ -3,6 +3,8 @@
     background-color: rgb(249, 249, 249);
     min-height: 100vh;
 }
+
+
 .container {
     width: 90%;
     margin: auto;
@@ -23,3 +25,40 @@
     width: 30%;
 }
 
+
+@media (max-width: 1024px) and (min-width: 600px) {
+    .container {
+        width: 90%;
+    }
+    
+    .left {
+        display: none;
+    }
+
+    .center {
+        width: 100%;
+    }
+
+    .right {
+        display: none;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .container {
+        width: 100%;
+    }
+
+    .left {
+        display: none;
+    }
+
+    .center {
+        width: 100%;
+    }
+
+    .right {
+        display: none;
+    }
+}

@@ -35,6 +35,7 @@ public class StoryService
         var user = await _userRepository.GetByIdAsync(userId);
         if (user is null)
             return null;
+
         Story story = new Story
         {
             Content = sanitizer.Sanitize(body["Content"]!),
@@ -47,6 +48,7 @@ public class StoryService
             User = user!
         };
         Story? result = await _storyRepository.AddAsync(story);
+
         if (result is null)
             return null;
         _redis.Set($"user?username={user.Username}", JsonConvert.SerializeObject(user, JsonSettings.DefaultSettings), new TimeSpan(1, 0, 0));
@@ -85,6 +87,27 @@ public class StoryService
         {
             List<Story> stories = JsonConvert.DeserializeObject<List<Story>>(storiesFromRedis)!;
             return stories.Select(story => new StoryFullDto(story)).ToList();
+        }
+    }
+
+    // To get story with it's id
+    public async Task<StoryFullDto?> GetStoryById(int id)
+    {
+        var storyFromRedis = _redis.Get($"story:{id}");
+        if (storyFromRedis is null)
+        {
+            var storyFromDb = await _storyRepository.GetByIdAsync(id);
+            if (storyFromDb is null)
+                return null;
+            _redis.Set($"story:{id}", JsonConvert.SerializeObject(storyFromDb, JsonSettings.DefaultSettings), new TimeSpan(1, 0, 0));
+            return new StoryFullDto(storyFromDb);
+        }
+        else
+        {
+            var story = JsonConvert.DeserializeObject<Story>(storyFromRedis, JsonSettings.DefaultSettings);
+            if (story is null)
+                return null;
+            return new StoryFullDto(story);
         }
     }
 }
