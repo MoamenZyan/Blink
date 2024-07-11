@@ -51,7 +51,7 @@ public class StoryService
 
         if (result is null)
             return null;
-        _redis.Set($"user?username={user.Username}", JsonConvert.SerializeObject(user, JsonSettings.DefaultSettings), new TimeSpan(1, 0, 0));
+        _redis.Del($"user?username={user.Username}");
         _redis.Del("users");
         return result;
     }

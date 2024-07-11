@@ -2,8 +2,12 @@
     position: relative;
     height: 220px;
 }
+.info {
+    margin-top: 100px;
+}
 
 .banner_photo_div {
+    cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -12,6 +16,35 @@
     width: 95%;
     height: 280px;
     border-bottom-left-radius: 50px;
+    transition: 0.2s;
+}
+
+.banner_photo_div:hover {
+    transition: 0.2s;
+    filter: brightness(1.2);
+}
+
+.banner_photo {
+    object-fit: cover;
+    margin: 0 auto;
+    border-bottom-left-radius: 50px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 95%;
+    height: 230px;
+    transition: 0.2s;
+}
+
+.banner_photo:hover {
+    transition: 0.2s;
+    filter: brightness(1.2);
+}
+
+.banner_input {
+    display: none;
+    visibility: none;
 }
 
 .user_info {
@@ -42,6 +75,7 @@
 }
 
 .default_user_photo {
+    cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -56,6 +90,7 @@
     border-radius: 50%;
     transition: 0.2s;
 }
+
 
 .default_user_photo:hover {
     filter: grayscale(0.5);
@@ -293,4 +328,9 @@
     .user_info_details h1{
         font-size: 15pt;
     }
+
+    .info {
+        margin-top: 60px;
+    }
+    
 }

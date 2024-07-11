@@ -34,6 +34,7 @@ public class PostNotificationDto
     public string? UserPhoto {get; set;}
     public string Message {get; set;}
     public DateTime CreatedAt {get; set;}
+    public string? PostPhoto {get; set;}
     public int Reactions {get; set;}
     public int PostId {get; set;}
 
@@ -46,6 +47,7 @@ public class PostNotificationDto
         UserPhoto = notification.User.Photo;
         Message = notification.Message;
         CreatedAt = notification.CreatedAt;
+        PostPhoto = notification.Post.Photo;
         PostId = notification.Post.Id;
         Reactions = notification.Post.Reactions.Count;
     }

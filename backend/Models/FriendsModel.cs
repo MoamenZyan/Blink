@@ -40,3 +40,34 @@ public class FriendDto
         return FriendId.GetHashCode();
     }
 }
+
+public class FriendOfDto
+{
+    public int FriendId {get; set;}
+    public string Type {get; set;}
+    public DateTime CreatedAt {get; set;}
+
+    public UserDto Friend {get; set;}
+
+    public FriendOfDto(Friends friendRequest)
+    {
+        FriendId = friendRequest.UserId1;
+        Type = friendRequest.Type;
+        CreatedAt = friendRequest.CreatedAt;
+        Friend = new UserDto(friendRequest.User1);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is FriendDto other)
+        {
+            return FriendId == other.FriendId;
+        }
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return FriendId.GetHashCode();
+    }
+}

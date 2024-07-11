@@ -27,7 +27,7 @@ export default function Header({overlay}) {
             const notifications = await GetAllNotifications();
             console.log(notifications);
             if (notifications) {
-                const postNotifications = notifications.notifications.postNotifications?.$values.map((noti) => ({...noti, type: "friend"}));
+                const postNotifications = notifications.notifications.postNotification?.$values.map((noti) => ({...noti, type: "post"}));
                 const friendNotifications = notifications.notifications.friendRequestNotifications?.$values.map((noti) => ({...noti, type: "friend"}));
                 setFriendRequestNotifiLength((friendNotifications?.length || 0));
                 setpostNotificationsLength((postNotifications?.length || 0));

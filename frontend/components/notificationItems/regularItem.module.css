@@ -1,19 +1,20 @@
 .item {
+    cursor: pointer;
     position: relative;
     display: flex;
     align-items: center;
     border-radius: 25px;
     margin-bottom: 10px;
-    padding: 20px 10px;
+    padding: 10px 10px;
     background-color: rgba(0, 0, 0, 0.052);
 }
 
-.photo {
-    margin-right: 15px;
-    mask: url("./assets/user_photo_small.svg") no-repeat center;
-    width: 40px;
-    height: 40px;
-    background-color: var(--dark-yellow);
+.profile_photo {
+    margin-right: 10px;
+}
+.profile_photo img {
+    border-radius: 50%;
+    border: 5px solid var(--dark-yellow);
 }
 
 .time {

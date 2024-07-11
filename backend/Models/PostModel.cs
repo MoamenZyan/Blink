@@ -5,6 +5,7 @@ public class Post
     public int UserId {get; set;}
     public string? Photo {get; set;}
     public string? Caption {get; set;}
+    public string? Banner {get; set;}
     public required string Privacy {get; set;}
     public required string Type {get; set;}
     public DateTime CreatedAt {get; set;}
@@ -26,6 +27,7 @@ public class PostDto
     public string? Caption {get; set;}
     public string? UserPhoto {get; set;}
     public string? Username {get; set;}
+    public string? Banner {get; set;}
     public string Privacy {get; set;}
     public string Type {get; set;}
     public DateTime CreatedAt {get; set;}
@@ -43,6 +45,7 @@ public class PostDto
         Privacy = post.Privacy;
         CreatedAt = post.CreatedAt;
         UserPhoto = post.User.Photo;
+        Banner = post.User.Banner;
         Username = post.User.Username;
         Type = post.Type;
         Replies = post.Replies.Select(r => new ReplyDto(r)).ToList();

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Signup from "@/ApiHelper/Authentication/signup";
 import { useRef, useState } from "react";
 import Spinner from "@/components/spinner/spinner.module";
+import Image from "next/image";
 
 export default function SignupPage() {
     const [loading, setLoading] = useState(false);
@@ -61,7 +62,7 @@ export default function SignupPage() {
                         </div>
                         <div className={styles.right}>
                             <div className={styles.inner_right_wrapper}>
-                                <div className={styles.photo}></div>
+                            <Image className={styles.photo} src={"/assets/photo2.svg"} width={50} height={50}/>
                                 <div className={styles.stars}></div>
                             </div>
                         </div>

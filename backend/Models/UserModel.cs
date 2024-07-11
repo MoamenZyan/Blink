@@ -10,6 +10,7 @@ public class User
     public required string Username {get; set;}
     public required string FirstName {get; set;}
     public string Country {get; set;} = null!;
+    public string Banner {get; set;} = null!;
     public string City {get; set;} = null!;
     public required string LastName {get; set;}
     public required string Password {get; set;}
@@ -45,6 +46,7 @@ public class UserFullDto
     public string Privacy {get; set;}
     public string Email {get; set;}
     public string Country {get; set;}
+    public string Banner {get; set;}
     public string City {get; set;}
     public DateTime CreatedAt {get; set;}
     public string? About {get; set;}
@@ -54,6 +56,7 @@ public class UserFullDto
     public virtual List<PostDto> Posts {get; set;} = new List<PostDto>();
     public virtual List<StoryDto> Stories {get; set;} = new List<StoryDto>();
     public List<FriendDto> Friends {get; set;} = new List<FriendDto>();
+    public List<FriendOfDto> FriendOf {get; set;} = new List<FriendOfDto>();
     public List<FriendDto> OutGoingfriendRequest {get; set;} = new List<FriendDto>(); 
     public List<FriendDto> IncomingFriendRequest {get; set;} = new List<FriendDto>();
 
@@ -69,13 +72,14 @@ public class UserFullDto
         Country = user.Country;
         City = user.City;
         CreatedAt = user.CreatedAt;
+        Banner = user.Banner;
         Privacy = user.Privacy;
         About = user.About;
         Headline = user.Headline;
         Posts = user.Posts.Select(p => new PostDto(p)).OrderByDescending(p => p.CreatedAt).ToList() ?? new List<PostDto>();
         Stories = user.Stories.Select(s => new StoryDto(s)).OrderByDescending(p => p.CreatedAt).ToList();
-        Friends = user.Friends.Where(f => f.Type == "accepted").Select(f => new FriendDto(f))
-                    .Concat(user.FriendOf.Where(f => f.Type == "accepted").Select(f => new FriendDto(f))).Distinct().ToList();
+        Friends = user.Friends.Where(f => f.Type == "accepted" && f.UserId1 == Id).Select(f => new FriendDto(f)).ToList();
+        FriendOf = user.FriendOf.Where(f => f.Type == "accepted" && f.UserId2 == Id).Select(f => new FriendOfDto(f)).ToList();
         OutGoingfriendRequest = user.Friends.Where(f => f.Type == "pending").Select(f => new FriendDto(f)).ToList();
         IncomingFriendRequest = user.FriendOf.Where(f => f.Type == "pending").Select(f => new FriendDto(f)).ToList();
         friendStatus = "";

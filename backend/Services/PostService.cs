@@ -42,6 +42,7 @@ public class PostService
         {
             UserId = id,
             Photo = photo == null ? "null" : $"https://blink-blog.s3.eu-north-1.amazonaws.com/postPhoto/{photoName}",
+            Banner = "null",
             Privacy = Convert.ToString(body["Privacy"])!,
             Caption = sanitizer.Sanitize(Convert.ToString(body["Caption"])!),
             CreatedAt = DateTime.Now,

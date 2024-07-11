@@ -16,10 +16,12 @@ export default function ProfilePage(props) {
     const [loaded, setLoaded] = useState(false);
     const [user, setUser] = useState({});
     const [posts, setPosts] = useState([]);
+    const [friends, setFriends] = useState([]);
 
     useEffect(() => {
         const getUserInfo = async () => {
             const result = await GetUserByUsername(props.params.profile_name);
+            
             if (!isNaN(props.params.profile_name)) {
                 router.push("/");
             }
@@ -30,6 +32,7 @@ export default function ProfilePage(props) {
                 setUser(result.user);
                 setPosts(result.user.posts.$values);
                 setLoaded(true);
+                setFriends((result.user.friendOf?.$values ?? []).concat(result.user.friends?.$values ?? []));
             } else {
                 router.push("/");
             }
@@ -47,7 +50,7 @@ export default function ProfilePage(props) {
                             <SettingsList user={user} />
                         </div>
                         <div className={styles.center}>
-                            <UserInfoSection setTrigger={setTrigger} trigger={trigger} user={user} isLogged={isLogged} />
+                            <UserInfoSection friends={friends} setTrigger={setTrigger} trigger={trigger} user={user} isLogged={isLogged} />
                             <PostsWrapper setTrigger={setTrigger} trigger={trigger} posts={posts} />
                         </div>
                         <div className={styles.right}></div>

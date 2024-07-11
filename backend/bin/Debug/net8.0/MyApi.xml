@@ -198,6 +198,18 @@
         <member name="M:backend.Migrations.friendsfeatures.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:backend.Migrations.banner">
+            <inheritdoc />
+        </member>
+        <member name="M:backend.Migrations.banner.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:backend.Migrations.banner.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:backend.Migrations.banner.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
         <member name="M:UserService.AddUserAsync(System.Collections.Generic.Dictionary{System.String,Microsoft.Extensions.Primitives.StringValues})">
             <summary>
             Do validation before adding user to database

@@ -91,7 +91,7 @@ export default function Post({post, setTrigger, trigger}) {
                             {post.userPhoto != "null" && <img className={styles.user_photo} src={post.userPhoto} alt=""/>}
                         </div>
                         <div className={styles.user_info}>
-                            <h2 onClick={() => {router.push(`/profile/${post.username}`)}}>@{post.username}</h2>
+                            <h2 onClick={() => {router.push(`/profile/${post.username}`)}}>@{post.username} {post.type == "banner_photo" && <span>changed his banner</span>}</h2>
                             <div style={{display: "flex", alignItems: "center"}}>
                                 <div className={styles.privacy_icon}>
                                     <Image src={iconPath} width={15} height={15} alt="privacy"/>
@@ -106,7 +106,7 @@ export default function Post({post, setTrigger, trigger}) {
                     </div>
                 </div>
                 <div className={styles.body}>
-                    {post.photo != "null" && <img className={styles.body_photo} src={post.photo} />}
+                    {post.photo != "null" && <img className={styles.body_photo} src={post.type == "banner_photo" ? post.banner : post.photo} />}
                     <div className={styles.caption}>
                         <p>{post.photo != "null" && <>{post.username}</>}<span style={{marginLeft: post.photo != "null" && "20px"}}>{post.caption}</span></p>
                     </div>

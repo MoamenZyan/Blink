@@ -51,6 +51,37 @@ public class UploadPhotoService
         }
     }
 
+    // Upload banner to s3 bucket for user
+    public async Task<(bool, User?)> ProfileBannerUpload(IFormFile photo, int userId)
+    {
+        // AWS S3 Configurations
+        DotNetEnv.Env.Load();
+        var accessKey = DotNetEnv.Env.GetString("AWS_ACCESS_KEY");
+        var secretKey = DotNetEnv.Env.GetString("AWS_SECRET_KEY");
+        var region = RegionEndpoint.EUNorth1;
+        var bucketName = "blink-blog";
+        using (var client = new AmazonS3Client(accessKey, secretKey, region))
+        {
+            try
+            {
+                var transfer = new TransferUtility(client);
+                var photoName = uuid.ToString();
+                await transfer.UploadAsync(photo.OpenReadStream(), bucketName, $"profilePhoto/{photoName}");
+                var user = await _userRepository.GetByIdAsync(userId);
+                if (user is null)
+                    return (false, null);
+                user.Banner = $"https://blink-blog.s3.eu-north-1.amazonaws.com/profilePhoto/{photoName}";
+                await _userRepository.Update(user);
+                return (true, user);
+            }
+            catch (Exception exp)
+            {
+                Console.WriteLine(exp);
+                return (false, null);
+            }
+        }
+    }
+
 
     // Upload photo to s3 bucket for a post
     public async Task<bool> PostPhotoUpload(IFormFile photo, string photoName)

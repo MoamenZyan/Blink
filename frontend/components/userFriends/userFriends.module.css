@@ -1,0 +1,36 @@
+.parent {
+    position: relative;
+}
+
+.photo {
+    cursor: pointer;
+    object-fit: cover;
+    border: 3px solid var(--dark-yellow);
+    position: absolute;
+    border-radius: 50%;
+}
+
+.photo1 {
+    z-index: 10;
+}
+
+.photo2 {
+    z-index: 8;
+    left: 35px;
+}
+
+.photo3 {
+    z-index: 7;
+    left: 70px;
+}
+
+.photo4 {
+    z-index: 6;
+    left: 105px;
+}
+
+.photo5 {
+    z-index: 5;
+    left: 140px;
+}
+

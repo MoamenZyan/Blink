@@ -1,12 +1,14 @@
 public class FriendService
 {
     private readonly IRepository<Friends> _friendsRepository;
+    private readonly IRepository<User> _usersRepository;
     private readonly NotificationService _notificationService;
     private readonly IRedisCache _redis;
-    public FriendService (IRepository<Friends> friendsRepository, IRedisCache redis, NotificationService notificationService)
+    public FriendService (IRepository<Friends> friendsRepository, IRedisCache redis, NotificationService notificationService, IRepository<User> usersRepository)
     {
         _friendsRepository = friendsRepository;
         _notificationService = notificationService;
+        _usersRepository = usersRepository;
         _redis = redis;
     }
 
@@ -53,6 +55,8 @@ public class FriendService
             if (request.Type != "accepted")
                 request.Type = "accepted";
             
+            var currentUser = await _usersRepository.GetByIdAsync(userId);
+            var sender = await _usersRepository.GetByIdAsync(id);
             await _friendsRepository.Update(request);
             await _notificationService.DeleteFriendRequestNotification(id, userId);
             _redis.Del($"friendStatus:{userId}:{id}");
@@ -63,6 +67,8 @@ public class FriendService
             _redis.Del($"{id}:non-friends");
             _redis.Del($"{id}:posts");
             _redis.Del($"{userId}:posts");
+            _redis.Del($"user?username={currentUser?.Username}");
+            _redis.Del($"user?username={sender?.Username}");
             _redis.Del("users");
             return true;
         }
@@ -86,7 +92,9 @@ public class FriendService
 
             if (request is null)
                 return false;
-            
+
+            var currentUser = await _usersRepository.GetByIdAsync(userId);
+            var sender = await _usersRepository.GetByIdAsync(id);
             await _friendsRepository.Delete(request);
             await _notificationService.DeleteFriendRequestNotification(userId, id);
             _redis.Del($"friendStatus:{userId}:{id}");
@@ -95,6 +103,8 @@ public class FriendService
             _redis.Del($"{userId}:non-friends");
             _redis.Del($"{id}:friends");
             _redis.Del($"{id}:non-friends");
+            _redis.Del($"user?username={currentUser?.Username}");
+            _redis.Del($"user?username={sender?.Username}");
             _redis.Del("users");
             return true;
         }

@@ -146,6 +146,27 @@ public class UsersController : Controller
         }
     }
 
+    [HttpPost("/api/v1/user-banner")]
+    public async Task<IActionResult> UploadBanner(IFormFile photo)
+    {
+        if (photo is null || photo.Length == 0)
+            return BadRequest("No banner uploaded");
+
+        var userId = JwtService.VerifyToken(Convert.ToString(Request.Cookies["jwt"])!);
+        if (userId is not default(int))
+        {
+            var result = await _userService.UploadProfileBanner(photo, userId);
+            if (result is false)
+                return new JsonResult(new {status=false,message="error in uploading banner"}){StatusCode=500};
+            else
+                return Ok("banner uploaded successfully");
+        }
+        else
+        {
+            return new JsonResult(new {status=false,message="corrupted token"}){StatusCode=422};
+        }
+    }
+
     [HttpGet("/api/v1/user/logout")]
     public IActionResult Logout()
     {

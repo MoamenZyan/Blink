@@ -17,7 +17,7 @@
 .center .left_div {
     overflow: hidden;
     position: relative;
-    width: 50%;
+    width: 30%;
 }
 
 .right_div {
@@ -25,10 +25,11 @@
     position: relative;
     display: flex;
     justify-content: center;
-    width: 50%;
+    width: 30%;
 }
 
 .center .center_div {
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -51,10 +52,21 @@
     .center .center_div {
         width: 100%;
     }
+    .left_div {
+        display: none;
+    }
+
+    .right_div {
+        display: none;
+    }
     .container {
         position: relative;
         width: 98%;
         margin: auto;
+    }
+
+    .no_posts {
+        font-size: 13pt;
     }
 }
 
@@ -71,10 +83,4 @@
 .end_of_posts {
     width: 100%;
     height: auto;
-}
-
-@media (max-width: 600px) {
-    .no_posts {
-        font-size: 13pt;
-    }
 }

@@ -71,7 +71,7 @@
     background-color: white;
 }
 
-.body img {
+.body .profile_photo {
     border: 10px solid white;
     position: absolute;
     top: 160px;
@@ -86,11 +86,23 @@
     color: gray;
 }
 
+.banner_div {
+    width: 100%;
+    height: 100%;
+}
+
 .banner_body {
     background: url("./assets/banner.png") no-repeat center;
     width: 100%;
     height: 250px;
     background-size: cover;
+}
+
+.banner_photo {
+    width: 100%;
+    height: 250px;
+    position: absolute;
+    object-fit: cover;
 }
 
 .body_photo {

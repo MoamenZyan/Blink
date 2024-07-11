@@ -65,6 +65,7 @@ export default function ProfilePhotoPost({post, setTrigger, trigger}) {
             if (result)
                 setLiked(true);
         }
+        console.log(post);
         checkReaction();
     }, []);
 
@@ -93,8 +94,11 @@ export default function ProfilePhotoPost({post, setTrigger, trigger}) {
                     </div>
                 </div>
                 <div className={styles.body}>
-                    <div className={styles.banner_body}></div>
-                    <img src={post.photo} alt=""/>
+                    <div className={styles.banner_div}>
+                        {post.banner == "null" && <div className={styles.banner_body}></div>}
+                        {post.banner != "null" && <img className={styles.banner_photo} src={post.banner} width={50} height={50}/>}
+                    </div>
+                    <img className={styles.profile_photo} src={post.photo} alt=""/>
                 </div>
                 <div className={styles.reactions}>
                     <div className={styles.left}>

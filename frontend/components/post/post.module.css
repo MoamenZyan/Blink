@@ -42,6 +42,11 @@
     margin-bottom: 5px;
 }
 
+.user_info h2 span {
+    font-weight: 500;
+    font-size: 13pt;
+}
+
 .settings_wrapper {
     background-color: white;
     transition: 0.2s;

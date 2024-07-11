@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import Login from "@/ApiHelper/Authentication/login";
 import Spinner from "@/components/spinner/spinner.module";
+import Image from "next/image";
 
 export default function LoginPage() {
     const [loading, setLoading] = useState(false);
@@ -59,7 +60,7 @@ export default function LoginPage() {
                                 <span style={{height: "350px"}}></span>
                                 <span style={{height: "400px"}}></span>
                             </div>
-                            <div className={styles.photo}></div>
+                            <Image className={styles.photo} src={"/assets/photo1.svg"} width={50} height={50}/>
                             <div className={styles.bottomright}>
                                 <span style={{width: "300px"}}></span>
                                 <span style={{width: "250px"}}></span>

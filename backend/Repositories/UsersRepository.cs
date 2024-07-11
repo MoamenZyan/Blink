@@ -33,6 +33,8 @@ public class UsersRepository : IRepository<User>
         var user = await _context.Users
                     .Include(u => u.Posts)
                     .Include(u => u.Stories)
+                    .Include(u => u.Friends)
+                    .Include(u => u.FriendOf)
                     .FirstOrDefaultAsync(u => u.Id == id);
 
         if (user is not null)
@@ -68,6 +70,8 @@ public class UsersRepository : IRepository<User>
                                 .ThenInclude(p => p.Comments)
                             .Include(u => u.Posts)
                                 .ThenInclude(p => p.Replies)
+                            .Include(u => u.Friends)
+                            .Include(u => u.FriendOf)
                             .Include(u => u.Stories)
                             .Where(func)
                             .ToList();

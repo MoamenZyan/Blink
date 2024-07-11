@@ -32,6 +32,8 @@ export default function HomePage() {
         };
         getInfo();
     }, [trigger]);
+
+
     if (fullLoaded) {
         return (
             <>

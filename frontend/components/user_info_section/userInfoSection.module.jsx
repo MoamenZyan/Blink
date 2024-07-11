@@ -8,11 +8,14 @@ import EmojiPicker from "emoji-picker-react";
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import UpdateUserAbout from "@/ApiHelper/users/updateUserAbout";
+import UserFriends from "../userFriends/userFriends.module";
+import UploadUserBanner from "@/ApiHelper/users/uploadUserBanner";
 
 
-export default function UserInfoSection({user, isLogged, setTrigger, trigger}) {
+export default function UserInfoSection({user, isLogged, setTrigger, trigger, friends}) {
     const router = useRouter();
     const list = useRef(null);
+    const banner_input = useRef(null);
     const [photoList, setPhotoList] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [editBio, setEditBio] = useState(false);
@@ -36,13 +39,25 @@ export default function UserInfoSection({user, isLogged, setTrigger, trigger}) {
         setEditedBio(prevCaption => prevCaption + emoji.emoji);
       };
 
-    const handleUpload = async (input) => {
+    const handleUploadPhoto = async (input) => {
         const formData = new FormData();
         const photo = input.current.files[0];
         if (photo) {
             formData.append('photo', photo);
             setUploading(true);
             await UploadUserPhoto(formData);
+            setUploading(false);
+            setTrigger(!trigger);
+        }
+    }
+
+    const handleUploadBanner = async () => {
+        const formData = new FormData();
+        const photo = banner_input.current.files[0];
+        if (photo) {
+            formData.append('photo', photo);
+            setUploading(true);
+            await UploadUserBanner(formData);
             setUploading(false);
             setTrigger(!trigger);
         }
@@ -70,7 +85,11 @@ export default function UserInfoSection({user, isLogged, setTrigger, trigger}) {
     return (
         <>
             <div className={styles.info}>
-                <div className={styles.banner_photo_div}></div>
+                <div onClick={() => {banner_input.current.click()}} className={styles.banner}>
+                    {user.banner == "null" && <div className={styles.banner_photo_div}></div>}
+                    {user.banner != "null" && <img className={styles.banner_photo} src={user.banner} width={50} height={50}/>}
+                    <input onChange={handleUploadBanner} ref={banner_input} className={styles.banner_input} type="file"/>
+                </div>
                 <div className={styles.head}>
                     <div className={styles.user_info}>
                         <div className={styles.user_photo_wrapper}>
@@ -89,7 +108,7 @@ export default function UserInfoSection({user, isLogged, setTrigger, trigger}) {
                                     <div className={styles.camera}></div>
                                 </div>
                             </>}
-                            {photoList && <div ref={list}><ProfilePhotoList id={user.id} stories={user.stories.$values.length > 0} isMine={isMine} handleUpload={handleUpload} /></div>}
+                            {photoList && <div ref={list}><ProfilePhotoList id={user.id} stories={user.stories.$values.length > 0} isMine={isMine} handleUpload={handleUploadPhoto} /></div>}
                         </div>
                         <div className={styles.user_info_details}>
                             <h1>{user.firstName} {user.lastName}</h1>
@@ -102,13 +121,9 @@ export default function UserInfoSection({user, isLogged, setTrigger, trigger}) {
                                 <p>{user.username}</p>
                             </div>
                             <div className={styles.friends}>
-                                <p>300 friends</p>
+                                <p>{friends.length} friends</p>
                                 <div className={styles.friends_photos}>
-                                    <div className={styles.friend_photo}></div>
-                                    <div className={styles.friend_photo}></div>
-                                    <div className={styles.friend_photo}></div>
-                                    <div className={styles.friend_photo}></div>
-                                    <div className={styles.friend_photo}></div>
+                                    <UserFriends friends={friends} />
                                 </div>
                             </div>
                         </div>

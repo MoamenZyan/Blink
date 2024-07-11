@@ -70,7 +70,7 @@ export default function StoryCreationPage() {
     return (
         <>
             <div className={styles.parent}>
-                <Header overlay={uploading || privacyPopup}/>
+                <Header overlay={(uploading || privacyPopup)}/>
                 <div className={styles.container}>
                     <h2>Create Your Story</h2>
                     <div className={styles.content}>
@@ -145,7 +145,7 @@ export default function StoryCreationPage() {
                     <EmojiPicker onEmojiClick={(emoji) => {setStoryText(text => text + emoji.emoji)}} />
                 </div>}
                 {uploading && <StoryUpload backgroundColor={backgroundColor} text={storyText} imageURL={photoURL} textColor={textColor} />}
-                {uploading || privacyPopup && <div className={styles.overlay}></div>}
+                {(uploading || privacyPopup) && <div className={styles.overlay}></div>}
                 {privacyPopup && <StoryPrivacy text={"story"} setPrivacy={setPrivacy} handleIcon={handleIcon} setPrivacyPopup={setPrivacyPopup} />}
             </div>
         </>

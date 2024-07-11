@@ -47,6 +47,7 @@ public class UserService
                         Password = BCrypt.Net.BCrypt.EnhancedHashPassword(sanitizer.Sanitize(body["Password"]!), 10),
                         Email = sanitizer.Sanitize(body["Email"]!),
                         Photo = "null",
+                        Banner = "null",
                         Country = sanitizer.Sanitize(body["Country"]!),
                         City = sanitizer.Sanitize(body["City"]!),
                         Verified = false,
@@ -410,7 +411,32 @@ public class UserService
             Caption = "",
             CreatedAt = DateTime.Now,
             Photo = result.Item2!.Photo,
+            Banner = result.Item2!.Banner,
             Type = "profile_photo",
+            Privacy = "public",
+        };
+        await _postRepository.AddAsync(post);
+        List<Post>? posts = await _postRepository.GetAllAsync();
+        _redis.Set($"user?username={result.Item2.Username}", JsonConvert.SerializeObject(result.Item2, JsonSettings.DefaultSettings), new TimeSpan(1, 0, 0));
+        _redis.Set("posts", JsonConvert.SerializeObject(posts, JsonSettings.DefaultSettings), new TimeSpan(1, 0, 0));
+        _redis.Del("stories");
+        return true;
+    }
+
+    public async Task<bool> UploadProfileBanner(IFormFile photo, int userId)
+    {
+        var result = await _uploadPhotoService.ProfileBannerUpload(photo, userId);
+        if (result.Item1 is false)
+            return false;
+        
+        Post post = new Post
+        {
+            UserId = userId,
+            Caption = "",
+            CreatedAt = DateTime.Now,
+            Photo = result.Item2!.Photo,
+            Banner = result.Item2!.Banner,
+            Type = "banner_photo",
             Privacy = "public",
         };
         await _postRepository.AddAsync(post);

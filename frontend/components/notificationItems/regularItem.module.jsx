@@ -1,12 +1,13 @@
 import styles from "./regularItem.module.css";
+import { formatDistanceToNow } from "date-fns";
 
-export default function PostNotification() {
+export default function PostNotification({setTrigger, trigger, notification}) {
     return (
         <>
             <div className={styles.item}>
-                <div className={styles.photo}></div>
-                <p><strong>Mohamed A.</strong> and 67 others liked your post</p>
-                <p className={styles.time}>2:45 am</p>
+                <div className={styles.profile_photo}><img src={notification.userPhoto} width={60} height={60}/></div>
+                <p><strong>{notification.username}</strong> {notification.message}</p>
+                <p className={styles.time}>{formatDistanceToNow(new Date(notification.createdAt), {addSuffix: true})}</p>
             </div>
         </>
     );
