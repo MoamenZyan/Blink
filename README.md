@@ -14,6 +14,7 @@ Blink is a social media web app designed to be modern and help people connect !
 
 ## Blink's UI
 ### Blink's UI is done by UX/UI ENG. Ammar Yasser
+- His Linkedin: https://www.linkedin.com/in/ammar-yasser-60ab71248/
 
 #### Blink's Login & Signup Pages
 ![login](https://github.com/MoamenZyan/Blink/assets/114372355/0d024de1-d6b0-4fc0-a284-feac37a08af9)
