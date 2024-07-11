@@ -8,6 +8,8 @@ Blink is a social media web app designed to be modern and help people connect !
 - EF Core MySQL v8 => (main DB)
 - AWS SDK S3 v3.7 => (Storing Photos)
 - Swagger v6 => (for API documentation)
+- Docker => (for running containers)
+- Linux Ubuntu v20.04 LTS => (development environment)
 
 ## Blink's Architecture
 ![Blink's Architecture Diagram](https://github.com/MoamenZyan/Blink/assets/114372355/2818686d-121a-4692-b88b-d7bd62547959)
