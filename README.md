@@ -40,6 +40,8 @@ Blink is a social media web app designed to be modern and help people connect !
 
 #### Blink's User Profile
 ![profile](https://github.com/MoamenZyan/Blink/assets/114372355/5b44ef44-91af-4b7c-bc54-1b26ec793014)
+![notification](https://github.com/user-attachments/assets/e7df4769-87fc-4c5a-9cb9-b51992c74b7f)
+
 
 #### Blink's Responsiveness
 ![mobile](https://github.com/MoamenZyan/Blink/assets/114372355/8ce2ca8f-6d81-4788-87b5-9c4505911ceb)
